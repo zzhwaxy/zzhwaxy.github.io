@@ -29,7 +29,7 @@ title: 新的开始
   图片因为版权原因就没放上去.  
 ## 资料分享(持续更新中)
   
-  花钱买的电子书      [下载地址](/pdf/cocosguide.pdf)  
+  花钱买的电子书      [下载地址](https://github.com/zzhwaxy/zzhwaxy.github.io/raw/master/pdf/cocosguide.pdf)  
   网上学习资料的汇总     [资源地址](https://www.cnblogs.com/zilongshanren/archive/2012/02/17/2356516.html)  
    
   
