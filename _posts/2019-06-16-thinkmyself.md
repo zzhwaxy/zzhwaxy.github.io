@@ -30,7 +30,7 @@ title: 新的开始
 ## 资料分享(持续更新中)
   
   花钱买的电子书      [下载地址](https://github.com/zzhwaxy/zzhwaxy.github.io/raw/master/pdf/cocosguide.pdf)  
-  (如果打不开的话可以用下面百度云的[链接](https://pan.baidu.com/s/1eGDCnQMHM8MulVMnH_O5Hw 提取码:et36)  
+  (如果打不开的话可以用下面百度云的[链接](https://pan.baidu.com/s/1eGDCnQMHM8MulVMnH_O5Hw )  提取码:et36  
   网上学习资料的汇总     [资源地址](https://www.cnblogs.com/zilongshanren/archive/2012/02/17/2356516.html)  
    
   
