@@ -8,6 +8,10 @@ title: 自定义schedule实现定时器
   ![gif](/images/count.gif)  
 ## 代码如下:  
 {% highlight cpp %}
+        LabelTTF *label = LabelTTF::create("23:23:23", "fonts/arial.ttf", 40);
+	label->setPosition(Director::getInstance()->getVisibleSize().width/2, 
+		Director::getInstance()->getVisibleSize().height / 2);
+	addChild(label);
 	schedule([label](float dt) {
 		int hour = std::atoi(label->getString().substr(0, 2).c_str());
 		int minute = std::atoi(label->getString().substr(3, 2).c_str());
