@@ -21,22 +21,22 @@ data segment
 	db 'Hello,World!'
 data ends
 code segment
-start:	mov ax,data
-		mov ds,ax
-		mov ax,0b800h ;显存缓存区地址
-		mov es,ax
-		mov cx,12 ;字符串长度
-		mov si,0
-		mov di,160*12+40*2-12 ;显示到屏幕正中间,屏幕大小25*80		
-s:		mov bl,[si]
-        mov al,bl
-        mov ah,2 ;绿色
-        mov es:[di],ax
-        add di,2
-		inc si
-		loop s
-		mov ax,4c00h
-		int 21h
+start:mov ax,data
+      mov ds,ax
+      mov ax,0b800h ;显存缓存区地址
+      mov es,ax
+      mov cx,12 ;字符串长度
+      mov si,0
+      mov di,160*12+40*2-12 ;显示到屏幕正中间,屏幕大小25*80		
+s:    mov bl,[si]
+      mov al,bl
+      mov ah,2 ;绿色
+      mov es:[di],ax
+      add di,2
+      inc si
+      loop s
+      mov ax,4c00h
+      int 21h
 code ends
 end start
 {% endhighlight %}
