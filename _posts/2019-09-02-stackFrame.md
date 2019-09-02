@@ -37,11 +37,11 @@ int main(int argc, char* argv[])
 经过启动函数,来到main函数入口处.  
 ebp的值为0018FF80,esp的值为0018FF40.  
 
-![image](/images/stackFrame1.PNG)  
+![image](/images/stackframe1.PNG)  
 
 调用main函数以后:  
 
-![image](/images/stackFrame2.PNG)  
+![image](/images/stackframe2.PNG)  
 
 ebp的值没有变化，而esp的值减少为0018FF3C.  
 减少了4个字节,也就是指向了上面一个单元.  
@@ -65,7 +65,7 @@ ebp的值没有变化，而esp的值减少为0018FF3C.
 紧接着是将参数逆序压栈,  
 执行完以后栈中的值:  
 
-![image](/images/stackFrame3.PNG)  
+![image](/images/stackframe3.PNG)  
 
 * mov eax,dword ptr ss:[ebp-4]
 * push eax
@@ -74,7 +74,7 @@ ebp的值没有变化，而esp的值减少为0018FF3C.
 
 执行后寄存器的值如下:  
 
-![image](/images/stackFrame4.PNG)  
+![image](/images/stackframe4.PNG)  
 
 这就是将两个参数的值存到寄存器中,  
 准备执行add函数.  
