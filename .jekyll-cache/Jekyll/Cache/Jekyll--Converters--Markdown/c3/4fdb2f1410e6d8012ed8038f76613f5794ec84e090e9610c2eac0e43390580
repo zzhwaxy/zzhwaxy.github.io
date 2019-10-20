@@ -1,0 +1,176 @@
+I"%Z<h2 id="前言">前言</h2>
+<p>游戏中,通过定时器实现画面和动作的更新.<br />
+用到的就是系统的ccschedule类.<br />
+下面就会谈一下计时器的实现机制.</p>
+<h2 id="定义">定义</h2>
+
+<figure class="highlight"><pre><code class="language-cpp" data-lang="cpp">    <span class="n">scheduler</span> <span class="o">=</span> <span class="k">new</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">nothrow</span><span class="p">)</span> <span class="n">Scheduler</span><span class="p">();</span>
+    <span class="n">_actionManager</span> <span class="o">=</span> <span class="k">new</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">nothrow</span><span class="p">)</span> <span class="n">ActionManager</span><span class="p">();</span>
+    <span class="n">_scheduler</span><span class="o">-&gt;</span><span class="n">scheduleUpdate</span><span class="p">(</span><span class="n">_actionManager</span><span class="p">,</span> <span class="n">Scheduler</span><span class="o">::</span><span class="n">PRIORITY_SYSTEM</span><span class="p">,</span> <span class="nb">false</span><span class="p">);</span></code></pre></figure>
+
+<p>在director类中,定义并初始化了动作管理器的定时器.<br />
+优先级的值为INT_MIN.<br />
+还可以看到,这个schedule的优先级是最低的,这个放到下一篇文章来讲.<br />
+(优先级的值越低,优先级越高)</p>
+<h2 id="分析">分析</h2>
+<p>下面就先来看一下scheduleUpdate这个函数.</p>
+
+<figure class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span>
+    <span class="kt">void</span> <span class="nf">scheduleUpdate</span><span class="p">(</span><span class="n">T</span> <span class="o">*</span><span class="n">target</span><span class="p">,</span> <span class="kt">int</span> <span class="n">priority</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">paused</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">this</span><span class="o">-&gt;</span><span class="n">schedulePerFrame</span><span class="p">([</span><span class="n">target</span><span class="p">](</span><span class="kt">float</span> <span class="n">dt</span><span class="p">){</span>
+            <span class="n">target</span><span class="o">-&gt;</span><span class="n">update</span><span class="p">(</span><span class="n">dt</span><span class="p">);</span>
+        <span class="p">},</span> <span class="n">target</span><span class="p">,</span> <span class="n">priority</span><span class="p">,</span> <span class="n">paused</span><span class="p">);</span>
+    <span class="p">}</span></code></pre></figure>
+
+<p>传入的三个参数含义分别为需要更新的目标,优先级(用来比较),是否需要暂停.<br />
+可以看到,每一帧都调用了schedulePerFrame来对优先级进行排名.<br />
+然后调用了update函数来更新自己.</p>
+
+<figure class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="n">Scheduler</span><span class="o">::</span><span class="n">schedulePerFrame</span><span class="p">(</span><span class="k">const</span> <span class="n">ccSchedulerFunc</span><span class="o">&amp;</span> <span class="n">callback</span><span class="p">,</span> <span class="kt">void</span> <span class="o">*</span><span class="n">target</span><span class="p">,</span> <span class="kt">int</span> <span class="n">priority</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">paused</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">tHashUpdateEntry</span> <span class="o">*</span><span class="n">hashElement</span> <span class="o">=</span> <span class="nb">nullptr</span><span class="p">;</span>
+    <span class="n">HASH_FIND_PTR</span><span class="p">(</span><span class="n">_hashForUpdates</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">target</span><span class="p">,</span> <span class="n">hashElement</span><span class="p">);</span><span class="c1">//根据哈希表找到要排序的元素</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">hashElement</span><span class="p">)</span><span class="c1">//如果已经存在</span>
+    <span class="p">{</span>
+        <span class="c1">// change priority: should unschedule it first</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">hashElement</span><span class="o">-&gt;</span><span class="n">entry</span><span class="o">-&gt;</span><span class="n">priority</span> <span class="o">!=</span> <span class="n">priority</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">unscheduleUpdate</span><span class="p">(</span><span class="n">target</span><span class="p">);</span><span class="c1">//取消调度</span>
+        <span class="p">}</span> 
+        <span class="k">else</span>
+        <span class="p">{</span>
+            <span class="c1">// don't add it again</span>
+            <span class="n">CCLOG</span><span class="p">(</span><span class="s">"warning: don't update it again"</span><span class="p">);</span>
+            <span class="k">return</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="c1">// most of the updates are going to be 0, that's way there</span>
+    <span class="c1">// is an special list for updates with priority 0</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">priority</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">appendIn</span><span class="p">(</span><span class="o">&amp;</span><span class="n">_updates0List</span><span class="p">,</span> <span class="n">callback</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">paused</span><span class="p">);</span><span class="c1">//优先级为0,直接然后插入数据</span>
+    <span class="p">}</span>
+    <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">priority</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">priorityIn</span><span class="p">(</span><span class="o">&amp;</span><span class="n">_updatesNegList</span><span class="p">,</span> <span class="n">callback</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">priority</span><span class="p">,</span> <span class="n">paused</span><span class="p">);</span><span class="c1">//不为0,判断优先级再插入</span>
+    <span class="p">}</span>
+    <span class="k">else</span>
+    <span class="p">{</span>
+        <span class="c1">// priority &gt; 0</span>
+        <span class="n">priorityIn</span><span class="p">(</span><span class="o">&amp;</span><span class="n">_updatesPosList</span><span class="p">,</span> <span class="n">callback</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">priority</span><span class="p">,</span> <span class="n">paused</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>tHashUpdateEntry是一个结构体,它的定义如下:</p>
+
+<figure class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="k">typedef</span> <span class="k">struct</span> <span class="n">_hashUpdateEntry</span>
+<span class="p">{</span>
+    <span class="n">tListEntry</span>          <span class="o">**</span><span class="n">list</span><span class="p">;</span>        <span class="c1">// Which list does it belong to ?</span>
+    <span class="n">tListEntry</span>          <span class="o">*</span><span class="n">entry</span><span class="p">;</span>        <span class="c1">// entry in the list</span>
+    <span class="kt">void</span>                <span class="o">*</span><span class="n">target</span><span class="p">;</span>
+    <span class="n">ccSchedulerFunc</span>     <span class="n">callback</span><span class="p">;</span>
+    <span class="n">UT_hash_handle</span>      <span class="n">hh</span><span class="p">;</span>
+<span class="p">}</span> <span class="n">tHashUpdateEntry</span><span class="p">;</span></code></pre></figure>
+
+<p>里面有嵌套了一个结构体tListEntry;</p>
+
+<figure class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="k">typedef</span> <span class="k">struct</span> <span class="n">_listEntry</span>
+<span class="p">{</span>
+    <span class="k">struct</span> <span class="n">_listEntry</span>   <span class="o">*</span><span class="n">prev</span><span class="p">,</span> <span class="o">*</span><span class="n">next</span><span class="p">;</span>
+    <span class="n">ccSchedulerFunc</span>     <span class="n">callback</span><span class="p">;</span>
+    <span class="kt">void</span>                <span class="o">*</span><span class="n">target</span><span class="p">;</span>
+    <span class="kt">int</span>                 <span class="n">priority</span><span class="p">;</span>
+    <span class="kt">bool</span>                <span class="n">paused</span><span class="p">;</span>
+    <span class="kt">bool</span>                <span class="n">markedForDeletion</span><span class="p">;</span> <span class="c1">// selector will no longer be called and entry will be removed at end of the next tick</span>
+<span class="p">}</span> <span class="n">tListEntry</span><span class="p">;</span></code></pre></figure>
+
+<p>很容易发现这是一个双链表<br />
+hashUpdateEntry用来快速检索双链表.</p>
+
+<figure class="highlight"><pre><code class="language-cpp" data-lang="cpp">    <span class="k">struct</span> <span class="n">_listEntry</span> <span class="o">*</span><span class="n">_updatesNegList</span><span class="p">;</span>        <span class="c1">// list of priority &lt; 0</span>
+    <span class="k">struct</span> <span class="n">_listEntry</span> <span class="o">*</span><span class="n">_updates0List</span><span class="p">;</span>            <span class="c1">// list priority == 0</span>
+    <span class="k">struct</span> <span class="n">_listEntry</span> <span class="o">*</span><span class="n">_updatesPosList</span><span class="p">;</span>        <span class="c1">// list priority &gt; 0</span></code></pre></figure>
+
+<p>通过查看定义,了解到系统用了三个链表存放不同优先级的元素.<br />
+比较appendIn和priorityIn这两个函数:</p>
+
+<figure class="highlight"><pre><code class="language-cpp" data-lang="cpp">    <span class="kt">void</span> <span class="n">Scheduler</span><span class="o">::</span><span class="n">priorityIn</span><span class="p">(</span><span class="n">tListEntry</span> <span class="o">**</span><span class="n">list</span><span class="p">,</span> <span class="k">const</span> <span class="n">ccSchedulerFunc</span><span class="o">&amp;</span> <span class="n">callback</span><span class="p">,</span> <span class="kt">void</span> <span class="o">*</span><span class="n">target</span><span class="p">,</span> <span class="kt">int</span> <span class="n">priority</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">paused</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">tListEntry</span> <span class="o">*</span><span class="n">listElement</span> <span class="o">=</span> <span class="k">new</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">nothrow</span><span class="p">)</span> <span class="n">tListEntry</span><span class="p">();</span>
+    <span class="n">listElement</span><span class="o">-&gt;</span><span class="n">callback</span> <span class="o">=</span> <span class="n">callback</span><span class="p">;</span>
+    <span class="n">listElement</span><span class="o">-&gt;</span><span class="n">target</span> <span class="o">=</span> <span class="n">target</span><span class="p">;</span>
+    <span class="n">listElement</span><span class="o">-&gt;</span><span class="n">priority</span> <span class="o">=</span> <span class="n">priority</span><span class="p">;</span>
+    <span class="n">listElement</span><span class="o">-&gt;</span><span class="n">paused</span> <span class="o">=</span> <span class="n">paused</span><span class="p">;</span>
+    <span class="n">listElement</span><span class="o">-&gt;</span><span class="n">next</span> <span class="o">=</span> <span class="n">listElement</span><span class="o">-&gt;</span><span class="n">prev</span> <span class="o">=</span> <span class="nb">nullptr</span><span class="p">;</span>
+    <span class="n">listElement</span><span class="o">-&gt;</span><span class="n">markedForDeletion</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span><span class="c1">//赋值给链表</span>
+    <span class="c1">// empty list ?</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span> <span class="o">*</span><span class="n">list</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">DL_APPEND</span><span class="p">(</span><span class="o">*</span><span class="n">list</span><span class="p">,</span> <span class="n">listElement</span><span class="p">);</span><span class="c1">//如果为空,直接向后插入数据</span>
+    <span class="p">}</span>
+    <span class="k">else</span>
+    <span class="p">{</span>
+        <span class="kt">bool</span> <span class="n">added</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">tListEntry</span> <span class="o">*</span><span class="n">element</span> <span class="o">=</span> <span class="o">*</span><span class="n">list</span><span class="p">;</span> <span class="n">element</span><span class="p">;</span> <span class="n">element</span> <span class="o">=</span> <span class="n">element</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">priority</span> <span class="o">&lt;</span> <span class="n">element</span><span class="o">-&gt;</span><span class="n">priority</span><span class="p">)</span><span class="c1">//根据优先级比较并插入</span>
+            <span class="p">{</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">element</span> <span class="o">==</span> <span class="o">*</span><span class="n">list</span><span class="p">)</span>
+                <span class="p">{</span>
+                    <span class="n">DL_PREPEND</span><span class="p">(</span><span class="o">*</span><span class="n">list</span><span class="p">,</span> <span class="n">listElement</span><span class="p">);</span>
+                <span class="p">}</span>
+                <span class="k">else</span>
+                <span class="p">{</span>
+                    <span class="n">listElement</span><span class="o">-&gt;</span><span class="n">next</span> <span class="o">=</span> <span class="n">element</span><span class="p">;</span>
+                    <span class="n">listElement</span><span class="o">-&gt;</span><span class="n">prev</span> <span class="o">=</span> <span class="n">element</span><span class="o">-&gt;</span><span class="n">prev</span><span class="p">;</span>
+                    <span class="n">element</span><span class="o">-&gt;</span><span class="n">prev</span><span class="o">-&gt;</span><span class="n">next</span> <span class="o">=</span> <span class="n">listElement</span><span class="p">;</span>
+                    <span class="n">element</span><span class="o">-&gt;</span><span class="n">prev</span> <span class="o">=</span> <span class="n">listElement</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="n">added</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="p">(</span><span class="o">!</span> <span class="n">added</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">DL_APPEND</span><span class="p">(</span><span class="o">*</span><span class="n">list</span><span class="p">,</span> <span class="n">listElement</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="c1">// update hash entry for quick access</span>
+    <span class="n">tHashUpdateEntry</span> <span class="o">*</span><span class="n">hashElement</span> <span class="o">=</span> <span class="p">(</span><span class="n">tHashUpdateEntry</span> <span class="o">*</span><span class="p">)</span><span class="n">calloc</span><span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="o">*</span><span class="n">hashElement</span><span class="p">),</span> <span class="mi">1</span><span class="p">);</span>
+    <span class="n">hashElement</span><span class="o">-&gt;</span><span class="n">target</span> <span class="o">=</span> <span class="n">target</span><span class="p">;</span>
+    <span class="n">hashElement</span><span class="o">-&gt;</span><span class="n">list</span> <span class="o">=</span> <span class="n">list</span><span class="p">;</span>
+    <span class="n">hashElement</span><span class="o">-&gt;</span><span class="n">entry</span> <span class="o">=</span> <span class="n">listElement</span><span class="p">;</span>
+    <span class="n">memset</span><span class="p">(</span><span class="o">&amp;</span><span class="n">hashElement</span><span class="o">-&gt;</span><span class="n">hh</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">hashElement</span><span class="o">-&gt;</span><span class="n">hh</span><span class="p">));</span>
+    <span class="n">HASH_ADD_PTR</span><span class="p">(</span><span class="n">_hashForUpdates</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">hashElement</span><span class="p">);</span>
+<span class="p">}</span>
+    <span class="kt">void</span> <span class="n">Scheduler</span><span class="o">::</span><span class="n">appendIn</span><span class="p">(</span><span class="n">_listEntry</span> <span class="o">**</span><span class="n">list</span><span class="p">,</span> <span class="k">const</span> <span class="n">ccSchedulerFunc</span><span class="o">&amp;</span> <span class="n">callback</span><span class="p">,</span> <span class="kt">void</span> <span class="o">*</span><span class="n">target</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">paused</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">tListEntry</span> <span class="o">*</span><span class="n">listElement</span> <span class="o">=</span> <span class="k">new</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">nothrow</span><span class="p">)</span> <span class="n">tListEntry</span><span class="p">();</span><span class="c1">//同上</span>
+    <span class="n">listElement</span><span class="o">-&gt;</span><span class="n">callback</span> <span class="o">=</span> <span class="n">callback</span><span class="p">;</span>
+    <span class="n">listElement</span><span class="o">-&gt;</span><span class="n">target</span> <span class="o">=</span> <span class="n">target</span><span class="p">;</span>
+    <span class="n">listElement</span><span class="o">-&gt;</span><span class="n">paused</span> <span class="o">=</span> <span class="n">paused</span><span class="p">;</span>
+    <span class="n">listElement</span><span class="o">-&gt;</span><span class="n">priority</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">listElement</span><span class="o">-&gt;</span><span class="n">markedForDeletion</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">DL_APPEND</span><span class="p">(</span><span class="o">*</span><span class="n">list</span><span class="p">,</span> <span class="n">listElement</span><span class="p">);</span>
+    <span class="c1">// update hash entry for quicker access</span>
+    <span class="n">tHashUpdateEntry</span> <span class="o">*</span><span class="n">hashElement</span> <span class="o">=</span> <span class="p">(</span><span class="n">tHashUpdateEntry</span> <span class="o">*</span><span class="p">)</span><span class="n">calloc</span><span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="o">*</span><span class="n">hashElement</span><span class="p">),</span> <span class="mi">1</span><span class="p">);</span>
+    <span class="n">hashElement</span><span class="o">-&gt;</span><span class="n">target</span> <span class="o">=</span> <span class="n">target</span><span class="p">;</span>
+    <span class="n">hashElement</span><span class="o">-&gt;</span><span class="n">list</span> <span class="o">=</span> <span class="n">list</span><span class="p">;</span>
+    <span class="n">hashElement</span><span class="o">-&gt;</span><span class="n">entry</span> <span class="o">=</span> <span class="n">listElement</span><span class="p">;</span>
+    <span class="n">memset</span><span class="p">(</span><span class="o">&amp;</span><span class="n">hashElement</span><span class="o">-&gt;</span><span class="n">hh</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">hashElement</span><span class="o">-&gt;</span><span class="n">hh</span><span class="p">));</span>
+    <span class="n">HASH_ADD_PTR</span><span class="p">(</span><span class="n">_hashForUpdates</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">hashElement</span><span class="p">);</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>通过比较可以发现区别:<br />
+一个是按优先级插入,另一个是直接加入链表尾.</p>
+<h2 id="尾声">尾声</h2>
+<p>调用了target对应的update函数来实现具体的更新逻辑,这样,<br />
+定时器的部分就讲完了.<br />
+另外,还有系统自定义的schedule,里面用到了Timer类,实现上<br />
+也大同小异.</p>
+<h2 id="总结">总结</h2>
+<p>schedule通过每帧调用,来比较并插入链表,    <br />
+从而实现对优先级序列的排序,以此来管理更新的顺序.<br />
+整个流程差不多就这样了,有疏漏再补充吧.</p>
+:ET
