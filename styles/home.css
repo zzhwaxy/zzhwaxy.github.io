@@ -22,7 +22,7 @@ body {
 }
 
 a {
-    color: #333;
+    color: #5151;
     text-decoration: none;
 }
 
@@ -100,11 +100,12 @@ a:hover {
 }
 
 .topbar-mine {
-    font-size: 28px;
+    font-size: 45px;
     margin-left: 10px;
+    font-weight: bold;
     flex: 1;
     font-family: angelinaFont;
-    color: #151515;
+    color: #5151;
 }
 .topbar-button {
     color: #fff;
