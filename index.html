@@ -1,0 +1,60 @@
+---
+layout: home
+title: 更新测试中
+---
+
+<div class="topbar">
+    <div class="topbar-mine">一剑名动江湖</div>
+    <div class="topbar-button">
+        <a href="{{ site.url }}/index.html">Home</a>
+    </div>
+    <div class="topbar-button">
+        <a href="{{ site.url }}/tags.html">Tags</a>
+    </div>
+    <div class="topbar-button">
+        <a href="{{ site.url }}/feed.xml">Feeds</a>
+    </div>
+    <div class="topbar-button">
+        <a href="{{ site.url }}/about.html">About</a>
+    </div>
+</div>
+
+<div class="slogan">
+    「博客更新测试中。。。」
+</div>
+<ul>
+    {% for post in site.posts %}
+
+    <li class="post-line">
+        <a
+            class="post-title"
+            href="{{ site.baseurl }}{{ post.url }}"
+        >
+            {{ post.title }}
+        </a>
+
+        <div class="post-summary">
+            {{ post.content | strip_html | truncate: 80, " ..." }}
+        </div>
+        <div class="post-info">
+            <div class="category-area">
+                {% for category in post.categories %}
+                <a href="{{ site.url }}/tags.html#{{ category }}">
+                    <div class="category">
+                        {{ category }}
+                    </div>
+                </a>
+                {% endfor %}
+            </div>
+            <div class="right-info-area">
+                <div class="char-counter">
+                    字数 {{ post.content | strip_html | strip_newlines | remove: " " | size }}
+                </div>
+                <div class="post-date">
+                    {{ post.date | date: "%Y-%m-%d" }}
+                </div>
+            </div>
+        </div>
+    </li>
+    {% endfor %}
+</ul>
