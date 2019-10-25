@@ -1,17 +1,21 @@
----
-layout: default
----
+<!DOCTYPE html>
 
-<article class="post">
-  <h1>{{ page.title }}</h1>
-
-  <div class="entry">
-    {{ content }}
-  </div>
-
-  <div class="date">
-    Written on {{ page.date | date: "%B %e, %Y" }}
-  </div>
-
-  {% include disqus.html %}
-</article>
+<html>
+    <head>
+        <link rel="stylesheet" href="{{site.url}}/styles/font.css">
+        <link rel="stylesheet" media="screen and (min-width: 600px)" href="{{site.url}}/styles/post.css">
+    </head>
+    <body>
+        <div class="content-area">
+            <div class="title">
+                {{ page.title }}
+            </div>
+            <div class="char-counter">
+                字数{{ page.content | strip_html | strip_newlines | remove: " " | size }} {{ page.date | date: "%Y-%m-%d" }}
+            </div>
+            <div class="content">
+                {{ content }}
+            </div>
+        </div>
+    </body>
+</html>

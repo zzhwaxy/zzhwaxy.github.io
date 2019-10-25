@@ -14,8 +14,7 @@ title: 关于栈帧的理解
 先来看一下程序的源代码.  
 这个一个很简单的程序,  
 源码如下:  
-
-{% highlight cpp %}
+```c++
 #include "stdio.h"
 long add(long a, long b)
 {
@@ -29,8 +28,7 @@ int main(int argc, char* argv[])
     add(a,b);
     return 0;
 }
-
-{% endhighlight %}  
+```
 
 经vs2013编译后,  
 把程序拖到OD中进行调试.  

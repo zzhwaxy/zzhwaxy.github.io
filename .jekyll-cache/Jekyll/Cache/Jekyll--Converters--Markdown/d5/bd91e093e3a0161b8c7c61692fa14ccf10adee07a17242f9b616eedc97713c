@@ -1,4 +1,4 @@
-I"�<h2 id="前言">前言</h2>
+I"�<h2 id="前言">前言</h2>
 <p>最近看书的时候讲到了栈帧，下面将会通过调试的手段对栈帧有一个进一步的认识.</p>
 <h2 id="栈帧的产生">栈帧的产生</h2>
 <p>何谓栈帧呢?<br />
@@ -10,8 +10,7 @@
 <p>先来看一下程序的源代码.<br />
 这个一个很简单的程序,<br />
 源码如下:</p>
-
-<figure class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="cp">#include "stdio.h"
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include "stdio.h"
 </span><span class="kt">long</span> <span class="nf">add</span><span class="p">(</span><span class="kt">long</span> <span class="n">a</span><span class="p">,</span> <span class="kt">long</span> <span class="n">b</span><span class="p">)</span>
 <span class="p">{</span>
     <span class="kt">long</span> <span class="n">x</span> <span class="o">=</span> <span class="n">a</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">b</span><span class="p">;</span>
@@ -23,7 +22,8 @@
     <span class="kt">long</span> <span class="n">a</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
     <span class="n">add</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">);</span>
     <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">}</span></code></pre></figure>
+<span class="p">}</span>
+</code></pre></div></div>
 
 <p>经vs2013编译后,<br />
 把程序拖到OD中进行调试.<br />
