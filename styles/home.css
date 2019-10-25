@@ -56,11 +56,13 @@ a:hover {
 }
 
 .post-line {
-    margin-left: 20px;
-    margin-right: 20px;
+    margin-right: 10px;
+    width: 70%;
+    float: right;
     padding-top: 20px;
     padding-bottom: 20px;
-    border-bottom: 1px solid #EEE;
+    margin-bottom: 2px;
+    border-radius: 1px;
     background-color: rgba(255,255,255,0.8);
 }
 
@@ -93,7 +95,6 @@ a:hover {
     align-items: center;
     height: 50px;
     margin-top: 16px;
-    margin-left: 20px;
     margin-right: 20px;
     margin-bottom: 20px;
 
@@ -101,8 +102,9 @@ a:hover {
 
 .topbar-mine {
     font-size: 45px;
-    margin-left: 10px;
+    margin-left: 30%;
     font-weight: bold;
+    float: right;
     flex: 1;
     font-family: angelinaFont;
     color: #5151;
@@ -121,7 +123,7 @@ a:hover {
     font-size: 22px;
     text-align: center;
     color: #222;
-    margin-bottom: 100px;
+    margin-bottom: 40px;
 }
 
 .topbar-button a {
