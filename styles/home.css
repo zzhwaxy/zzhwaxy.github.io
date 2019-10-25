@@ -109,6 +109,9 @@ a:hover {
     font-family: angelinaFont;
     color: #5151;
 }
+.topbar-mine a:hover {
+    color: #ff9600;
+}
 .topbar-button {
     color: #fff;
     background-color: rgba(10,10,0,0.7);
@@ -131,8 +134,8 @@ a:hover {
     text-decoration: none;
 }
 
-.topbar-button a:hover {
-    color: #73BC83;
+.topbar-button  a:hover {
+    color: #ff9600;
 }
 
 .post-info {
