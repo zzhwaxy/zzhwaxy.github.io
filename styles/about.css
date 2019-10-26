@@ -60,6 +60,12 @@ li {
     font-size: 25px;
 }
 
+.topbar-chess {
+    font-size: 30px;
+    margin-left: 20px;
+    margin-top: 10px;
+    color: #00ff00;
+}
 .nickname {
     font-size: 16px;
     color: #AAA;

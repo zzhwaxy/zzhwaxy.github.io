@@ -56,7 +56,7 @@ a:hover {
 }
 
 .post-line {
-    margin-right: 10px;
+    margin-right: 22px;
     width: 70%;
     float: right;
     padding-top: 20px;
@@ -93,22 +93,26 @@ a:hover {
     display: flex;
     flex-direction: row;
     align-items: center;
-    height: 50px;
-    margin-top: 16px;
+    height: 30px;
+    margin-top: 50px;
     margin-right: 20px;
     margin-bottom: 20px;
-
 }
 
+
+.topbar-box {
+    position: absolute;
+}
 .topbar-mine {
     font-size: 45px;
     margin-left: 30%;
+    margin-bottom: 18px;
     font-weight: bold;
-    float: right;
     flex: 1;
     font-family: angelinaFont;
     color: #5151;
 }
+
 .topbar-mine a:hover {
     color: #ff9600;
 }
@@ -116,19 +120,26 @@ a:hover {
     color: #fff;
     background-color: rgba(10,10,0,0.7);
     border-radius: 25px;
-    padding: 10px;
-    margin-right:3px;
+    padding: 12px;
+    margin-left: 4px;
+    margin-right: 4px;
+    margin-bottom: 18px;
     font-size: 28px;
     font-family: angelinaFont;
 }
 
 .slogan {
-    font-size: 22px;
-    text-align: center;
-    color: #222;
-    margin-bottom: 40px;
+    margin-left:20px;
+    padding-top: 20px;
+    color: #fafafa;
+    font-size: 25px;
 }
-
+.topbar-chess {
+    font-size: 30px;
+    margin-left: 20px;
+    margin-top: 10px;
+    color: #fafafa;
+}
 .topbar-button a {
     color: #fff;
     text-decoration: none;
