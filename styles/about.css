@@ -1,0 +1,113 @@
+html,
+body {
+    margin: 0;
+    padding: 0;
+}
+
+html,
+body {
+    background-color: #000;
+}
+
+ul {
+    list-style-type: none;
+    padding-left: 20px;
+    padding-top: 10px;
+    margin: 0;
+}
+
+li {
+    line-height: 30px;
+    font-size: 16px;
+}
+
+.about a {
+    color: #000;
+    text-decoration: none;
+}
+
+.about a:hover {
+    color: #73BC83;
+}
+.box {
+    width: 35%;
+    min-width: 300px;
+    min-height: 500px;
+    background-color: #000;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(100, 100, 100,0.3);
+    display: flex;
+    margin: auto;
+    flex-direction: column;
+}
+.box-tilte {
+    font-size:27px;
+    margin:10px;
+    color: #00ff00;
+}
+.box-content{
+    font-size:20px;
+    margin-left: 25px;
+    color: #00ff00;
+}
+.slogan {
+    margin-left:20px;
+    margin-top:20px;
+    color: #00ff00;
+    font-size: 25px;
+}
+
+.nickname {
+    font-size: 16px;
+    color: #AAA;
+    font-family: mottoFont;
+    margin-bottom: 20px;
+}
+
+.about {
+    box-sizing: border-box;
+    background-color: #FFF;
+    border-radius: 5px;
+    width: 50%;
+    margin: 20px;
+    padding-top: 40px;
+    padding-bottom: 40px;
+    padding-left: 40px;
+    padding-right: 40px;
+}
+
+.title-area {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 40px;
+}
+
+.title {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 50px;
+    margin-top: 16px;
+    margin-bottom: 20px;
+
+}
+
+.name {
+    text-align: center;
+    color: #888;
+    margin-bottom: 40px;
+}
+
+.segement {
+    color: #888;
+    font-size: 18px;
+    margin-top: 40px;
+}
+
+.segement-content {
+    padding-left: 20px;
+    padding-top: 10px;
+    margin: 0;
+}
