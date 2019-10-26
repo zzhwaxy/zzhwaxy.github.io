@@ -88,6 +88,7 @@ a {
     padding-right: 20px;
     margin-top: 20px;
     margin-bottom: 40px;
+    display:none;
 }
 
 .topbar-mine {
@@ -147,6 +148,7 @@ a {
     margin-top: 55px;
     text-align: center;
     color: #fafafa;
+    display:none;
 }
 .category {
     color: #999;
