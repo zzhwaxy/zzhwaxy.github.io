@@ -98,7 +98,12 @@ a:hover {
     margin-right: 20px;
     margin-bottom: 20px;
 }
-
+.tail {
+    position: relative;
+    bottom:0;
+    right:0;
+    color:#00f000;
+}
 
 .topbar-box {
     position: absolute;
