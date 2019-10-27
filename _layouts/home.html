@@ -9,9 +9,27 @@
         <script src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome/css/font-awesome.min.css">
         <script src="https://cdn.jsdelivr.net/gh/stevenjoezhang/live2d-widget/autoload.js"></script>
-
+        <link rel="stylesheet" media="screen and (min-width: 600px)" href="{{site.url}}/styles/bg.css">
+        <style type="text/css">
+         .cb-slideshow li:nth-child(1)
+         span { background-image: url(../images/background.jpg);}
+         .cb-slideshow li:nth-child(2) span {
+             background-image: url(../images/bg_01.png);}
+         .cb-slideshow li:nth-child(3) span { background-image: url(../images/bg_02.jpg);}
+         .cb-slideshow li:nth-child(4) span { background-image: url(../images/bg_03.jpg);}
+         .cb-slideshow li:nth-child(5) span { background-image: url(../images/bg_04.png);}
+         .cb-slideshow li:nth-child(6) span { background-image: url(../images/bg_05.jpg);}
+        </style>
     </head>
     <body>
+        <ul class="cb-slideshow">
+            <li><span></span></li>
+            <li><span></span></li>
+            <li><span> </span></li>
+            <li><span></span></li>
+            <li><span></span></li>
+            <li><span></span></li>
+        </ul>
         <div class="content">
             {{ content }}
         </div>
