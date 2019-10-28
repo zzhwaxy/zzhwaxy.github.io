@@ -38,9 +38,10 @@ title: 欢迎来到我的新博客
 * styles/ 样式文件
 
 如果你懒得折腾,那么直接fork一份别人的配置是最快的. 
+
 比如我之前用的是[这个](https://github.com/barryclark/jekyll-now) 
-fork的时候注意一下版权.
-记得把文章和图片删掉.
+
+fork的时候注意一下版权. 记得把文章和图片删掉.
   
 ## 使用markdown写作
 

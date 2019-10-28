@@ -1,4 +1,4 @@
-I"�<h2 id="入坑jekyll">入坑jekyll</h2>
+I"<h2 id="入坑jekyll">入坑jekyll</h2>
 <p>以前把博客部署在用vps搭建的网站上,然而,那个编辑界面很不友好. 于是我投向了github Page + jekyll 的怀抱.</p>
 
 <p>Github 原生支持Jekyll。</p>
@@ -36,10 +36,11 @@
   <li>styles/ 样式文件</li>
 </ul>
 
-<p>如果你懒得折腾,那么直接fork一份别人的配置是最快的. 
-比如我之前用的是<a href="https://github.com/barryclark/jekyll-now">这个</a> 
-fork的时候注意一下版权.
-记得把文章和图片删掉.</p>
+<p>如果你懒得折腾,那么直接fork一份别人的配置是最快的.</p>
+
+<p>比如我之前用的是<a href="https://github.com/barryclark/jekyll-now">这个</a></p>
+
+<p>fork的时候注意一下版权. 记得把文章和图片删掉.</p>
 
 <h2 id="使用markdown写作">使用markdown写作</h2>
 
