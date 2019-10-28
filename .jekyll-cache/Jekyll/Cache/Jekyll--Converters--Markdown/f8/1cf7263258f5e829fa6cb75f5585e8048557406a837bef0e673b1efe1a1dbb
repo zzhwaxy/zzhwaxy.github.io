@@ -1,10 +1,13 @@
-I"�<h2 id="入坑jekyll">入坑jekyll</h2>
+I"�<h2 id="入坑jekyll">入坑jekyll</h2>
 <p>以前把博客部署在用vps搭建的网站上,然而,那个编辑界面很不友好. 于是我投向了github Page + jekyll 的怀抱.</p>
+
+<p>Github 原生支持Jekyll。</p>
 
 <p>jekyll 是什么呢?</p>
 
-<p>是用ruby写的静态博客生成器,使用它可以快速搭建自己的播客. 
-  而且不用花域名和服务器的冤枉钱,也节省了网站的的维护时间和精力.</p>
+<p>是用ruby写的静态博客生成器,使用它可以快速搭建自己的播客.</p>
+
+<p>而且不用花域名和服务器的冤枉钱,也节省了网站的的维护时间和精力.</p>
 
 <p>岂不美哉?</p>
 <h2 id="快速上手">快速上手</h2>
@@ -17,7 +20,7 @@
 
 <ul>
   <li>index.html    主页面</li>
-  <li>tgs.html    博客分类(还没加)</li>
+  <li>tags.html    博客分类(还没加)</li>
   <li>feed.xml    RSS订阅</li>
   <li>about.html    自我介绍</li>
   <li>404.html    错误链接的跳转</li>

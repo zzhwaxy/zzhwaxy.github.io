@@ -6,9 +6,12 @@ title: 欢迎来到我的新博客
 ## 入坑jekyll
   以前把博客部署在用vps搭建的网站上,然而,那个编辑界面很不友好. 于是我投向了github Page + jekyll 的怀抱. 
   
+  Github 原生支持Jekyll。
+  
   jekyll 是什么呢? 
   
   是用ruby写的静态博客生成器,使用它可以快速搭建自己的播客. 
+  
   而且不用花域名和服务器的冤枉钱,也节省了网站的的维护时间和精力. 
   
   岂不美哉? 
@@ -21,7 +24,7 @@ title: 欢迎来到我的新博客
   页面
   
 * index.html    主页面
-* tgs.html    博客分类(还没加)
+* tags.html    博客分类(还没加)
 * feed.xml    RSS订阅
 * about.html    自我介绍
 * 404.html    错误链接的跳转
