@@ -1,17 +1,20 @@
-I"%Z<h2 id="前言">前言</h2>
-<p>游戏中,通过定时器实现画面和动作的更新.<br />
-用到的就是系统的ccschedule类.<br />
+I"�Y<h2 id="前言">前言</h2>
+
+<p>游戏中,通过定时器实现画面和动作的更新. 
+用到的就是系统的ccschedule类. 
 下面就会谈一下计时器的实现机制.</p>
+
 <h2 id="定义">定义</h2>
 
 <figure class="highlight"><pre><code class="language-cpp" data-lang="cpp">    <span class="n">scheduler</span> <span class="o">=</span> <span class="k">new</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">nothrow</span><span class="p">)</span> <span class="n">Scheduler</span><span class="p">();</span>
     <span class="n">_actionManager</span> <span class="o">=</span> <span class="k">new</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">nothrow</span><span class="p">)</span> <span class="n">ActionManager</span><span class="p">();</span>
     <span class="n">_scheduler</span><span class="o">-&gt;</span><span class="n">scheduleUpdate</span><span class="p">(</span><span class="n">_actionManager</span><span class="p">,</span> <span class="n">Scheduler</span><span class="o">::</span><span class="n">PRIORITY_SYSTEM</span><span class="p">,</span> <span class="nb">false</span><span class="p">);</span></code></pre></figure>
 
-<p>在director类中,定义并初始化了动作管理器的定时器.<br />
-优先级的值为INT_MIN.<br />
-还可以看到,这个schedule的优先级是最低的,这个放到下一篇文章来讲.<br />
+<p>在director类中,定义并初始化了动作管理器的定时器. 
+优先级的值为INT_MIN. 
+还可以看到,这个schedule的优先级是最低的,这个放到下一篇文章来讲. 
 (优先级的值越低,优先级越高)</p>
+
 <h2 id="分析">分析</h2>
 <p>下面就先来看一下scheduleUpdate这个函数.</p>
 
@@ -23,8 +26,8 @@
         <span class="p">},</span> <span class="n">target</span><span class="p">,</span> <span class="n">priority</span><span class="p">,</span> <span class="n">paused</span><span class="p">);</span>
     <span class="p">}</span></code></pre></figure>
 
-<p>传入的三个参数含义分别为需要更新的目标,优先级(用来比较),是否需要暂停.<br />
-可以看到,每一帧都调用了schedulePerFrame来对优先级进行排名.<br />
+<p>传入的三个参数含义分别为需要更新的目标,优先级(用来比较),是否需要暂停. 
+可以看到,每一帧都调用了schedulePerFrame来对优先级进行排名. 
 然后调用了update函数来更新自己.</p>
 
 <figure class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="n">Scheduler</span><span class="o">::</span><span class="n">schedulePerFrame</span><span class="p">(</span><span class="k">const</span> <span class="n">ccSchedulerFunc</span><span class="o">&amp;</span> <span class="n">callback</span><span class="p">,</span> <span class="kt">void</span> <span class="o">*</span><span class="n">target</span><span class="p">,</span> <span class="kt">int</span> <span class="n">priority</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">paused</span><span class="p">)</span>
@@ -85,14 +88,14 @@
     <span class="kt">bool</span>                <span class="n">markedForDeletion</span><span class="p">;</span> <span class="c1">// selector will no longer be called and entry will be removed at end of the next tick</span>
 <span class="p">}</span> <span class="n">tListEntry</span><span class="p">;</span></code></pre></figure>
 
-<p>很容易发现这是一个双链表<br />
+<p>很容易发现这是一个双链表 
 hashUpdateEntry用来快速检索双链表.</p>
 
 <figure class="highlight"><pre><code class="language-cpp" data-lang="cpp">    <span class="k">struct</span> <span class="n">_listEntry</span> <span class="o">*</span><span class="n">_updatesNegList</span><span class="p">;</span>        <span class="c1">// list of priority &lt; 0</span>
     <span class="k">struct</span> <span class="n">_listEntry</span> <span class="o">*</span><span class="n">_updates0List</span><span class="p">;</span>            <span class="c1">// list priority == 0</span>
     <span class="k">struct</span> <span class="n">_listEntry</span> <span class="o">*</span><span class="n">_updatesPosList</span><span class="p">;</span>        <span class="c1">// list priority &gt; 0</span></code></pre></figure>
 
-<p>通过查看定义,了解到系统用了三个链表存放不同优先级的元素.<br />
+<p>通过查看定义,了解到系统用了三个链表存放不同优先级的元素. 
 比较appendIn和priorityIn这两个函数:</p>
 
 <figure class="highlight"><pre><code class="language-cpp" data-lang="cpp">    <span class="kt">void</span> <span class="n">Scheduler</span><span class="o">::</span><span class="n">priorityIn</span><span class="p">(</span><span class="n">tListEntry</span> <span class="o">**</span><span class="n">list</span><span class="p">,</span> <span class="k">const</span> <span class="n">ccSchedulerFunc</span><span class="o">&amp;</span> <span class="n">callback</span><span class="p">,</span> <span class="kt">void</span> <span class="o">*</span><span class="n">target</span><span class="p">,</span> <span class="kt">int</span> <span class="n">priority</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">paused</span><span class="p">)</span>
@@ -162,15 +165,15 @@ hashUpdateEntry用来快速检索双链表.</p>
     <span class="n">HASH_ADD_PTR</span><span class="p">(</span><span class="n">_hashForUpdates</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">hashElement</span><span class="p">);</span>
 <span class="p">}</span></code></pre></figure>
 
-<p>通过比较可以发现区别:<br />
+<p>通过比较可以发现区别: 
 一个是按优先级插入,另一个是直接加入链表尾.</p>
 <h2 id="尾声">尾声</h2>
-<p>调用了target对应的update函数来实现具体的更新逻辑,这样,<br />
-定时器的部分就讲完了.<br />
-另外,还有系统自定义的schedule,里面用到了Timer类,实现上<br />
+<p>调用了target对应的update函数来实现具体的更新逻辑,这样, 
+定时器的部分就讲完了. 
+另外,还有系统自定义的schedule,里面用到了Timer类,实现上 
 也大同小异.</p>
 <h2 id="总结">总结</h2>
-<p>schedule通过每帧调用,来比较并插入链表,    <br />
-从而实现对优先级序列的排序,以此来管理更新的顺序.<br />
+<p>schedule通过每帧调用,来比较并插入链表, 
+从而实现对优先级序列的排序,以此来管理更新的顺序. 
 整个流程差不多就这样了,有疏漏再补充吧.</p>
 :ET

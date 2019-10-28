@@ -1,4 +1,4 @@
-I"�E<h2 id="前言">前言</h2>
+I"1E<h2 id="前言">前言</h2>
 <p>上一期讲计时器的时候提到了动作管理器,这篇文章就来好好谈一下它.</p>
 
 <figure class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="k">typedef</span> <span class="k">struct</span> <span class="n">_hashElement</span>
@@ -13,7 +13,8 @@
 <span class="p">}</span> <span class="n">tHashElement</span><span class="p">;</span></code></pre></figure>
 
 <h3 id="动作的创建">动作的创建</h3>
-<p>先来看一下这个结构体,里面封装了对象拥有的动作的集合和其他一些动作的属性.<br />
+
+<p>先来看一下这个结构体,里面封装了对象拥有的动作的集合和其他一些动作的属性. 
 动作创建的时候是走了管理器的addAction函数的,如下:</p>
 
 <figure class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="n">ActionManager</span><span class="o">::</span><span class="n">addAction</span><span class="p">(</span><span class="n">Action</span> <span class="o">*</span><span class="n">action</span><span class="p">,</span> <span class="n">Node</span> <span class="o">*</span><span class="n">target</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">paused</span><span class="p">)</span>
@@ -40,10 +41,11 @@
      <span class="n">action</span><span class="o">-&gt;</span><span class="n">startWithTarget</span><span class="p">(</span><span class="n">target</span><span class="p">);</span><span class="c1">//开始动作</span>
 <span class="p">}</span></code></pre></figure>
 
-<p>action是要执行的动作,target是动作执行者.<br />
-可以发现,动作执行的对象是Ref类型的.<br />
+<p>action是要执行的动作,target是动作执行者. 
+可以发现,动作执行的对象是Ref类型的. 
 那么它就被放到内存管理中.</p>
 <h3 id="动作的更新">动作的更新</h3>
+
 <p>先看一下管理器的更新:</p>
 
 <figure class="highlight"><pre><code class="language-cpp" data-lang="cpp"> <span class="kt">void</span> <span class="n">ActionManager</span><span class="o">::</span><span class="n">update</span><span class="p">(</span><span class="kt">float</span> <span class="n">dt</span><span class="p">)</span>
@@ -101,17 +103,17 @@
     <span class="n">_currentTarget</span> <span class="o">=</span> <span class="nb">nullptr</span><span class="p">;</span>
 <span class="p">}</span> </code></pre></figure>
 
-<p>可以看到,每一次更新,管理器遍历了存放动作的集合,<br />
-如果当前动作不为空,<br />
-就调用step函数来实现具体的更新逻辑.<br />
-如果动作结束了,就把它停止并且从管理器中移除.<br />
-可能有人就要问了,管理器是怎么知道动作是否结束呢?<br />
+<p>可以看到,每一次更新,管理器遍历了存放动作的集合, 
+如果当前动作不为空, 
+就调用step函数来实现具体的更新逻辑. 
+如果动作结束了,就把它停止并且从管理器中移除. 
+可能有人就要问了,管理器是怎么知道动作是否结束呢? 
 别着急,下面就来讲一下.</p>
 <h3 id="动作的结束">动作的结束</h3>
-<p>通过查看继承关系可以知道,动作有actionInterval(持续动作)和<br />
-actionInstant(瞬时动作).<br />
-这两个都继承了FiniteTimeAction(加了时间的动作类).<br />
-FiniteTimeAction又继承了Action(最基本的动作类).<br />
+<p>通过查看继承关系可以知道,动作有actionInterval(持续动作)和 
+actionInstant(瞬时动作). 
+这两个都继承了FiniteTimeAction(加了时间的动作类). 
+FiniteTimeAction又继承了Action(最基本的动作类). 
 瞬时动作没什么好说的,直接看持续动作的更新类:</p>
 
 <figure class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="n">ActionInterval</span><span class="o">::</span><span class="n">step</span><span class="p">(</span><span class="kt">float</span> <span class="n">dt</span><span class="p">)</span>
@@ -133,12 +135,13 @@ FiniteTimeAction又继承了Action(最基本的动作类).<br />
     <span class="n">_done</span> <span class="o">=</span> <span class="n">_elapsed</span> <span class="o">&gt;=</span> <span class="n">_duration</span><span class="p">;</span>
 <span class="p">}</span></code></pre></figure>
 
-<p>最后一行代码是重点,如果持续的时间大于设定的总时间,<br />
+<p>最后一行代码是重点,如果持续的时间大于设定的总时间, 
 那么这个动作被标记完成,会被管理器干掉.</p>
 <h3 id="疑问">疑问</h3>
-<p>可以发现一个细节:<br />
-判断是放在更新之后的,<br />
-也就是说动作是在下一帧才真正移除的.<br />
-具体是什么原因我也不清楚,<br />
+
+<p>可以发现一个细节: 
+判断是放在更新之后的, 
+也就是说动作是在下一帧才真正移除的. 
+具体是什么原因我也不清楚, 
 有知道的可以告诉下我哈.</p>
 :ET

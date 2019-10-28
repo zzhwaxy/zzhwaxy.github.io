@@ -3,7 +3,8 @@ layout: post
 title: ActionManager的分析
 ---
 ## 前言
-上一期讲计时器的时候提到了动作管理器,这篇文章就来好好谈一下它.  
+上一期讲计时器的时候提到了动作管理器,这篇文章就来好好谈一下它. 
+
 {% highlight cpp %}
 typedef struct _hashElement
 {
@@ -16,9 +17,12 @@ typedef struct _hashElement
     UT_hash_handle      hh;
 } tHashElement;
 {% endhighlight %}
+
 ### 动作的创建
-先来看一下这个结构体,里面封装了对象拥有的动作的集合和其他一些动作的属性.  
+
+先来看一下这个结构体,里面封装了对象拥有的动作的集合和其他一些动作的属性. 
 动作创建的时候是走了管理器的addAction函数的,如下:
+
 {% highlight cpp %}
 void ActionManager::addAction(Action *action, Node *target, bool paused)
 {
@@ -44,11 +48,14 @@ void ActionManager::addAction(Action *action, Node *target, bool paused)
      action->startWithTarget(target);//开始动作
 }
 {% endhighlight %}
-action是要执行的动作,target是动作执行者.  
-可以发现,动作执行的对象是Ref类型的.  
-那么它就被放到内存管理中.  
+
+action是要执行的动作,target是动作执行者. 
+可以发现,动作执行的对象是Ref类型的. 
+那么它就被放到内存管理中. 
 ### 动作的更新
-先看一下管理器的更新:  
+
+先看一下管理器的更新: 
+
 {% highlight cpp %}
  void ActionManager::update(float dt)
 {
@@ -105,19 +112,22 @@ action是要执行的动作,target是动作执行者.
     _currentTarget = nullptr;
 } 
 {% endhighlight %}
-可以看到,每一次更新,管理器遍历了存放动作的集合,  
-如果当前动作不为空,  
-就调用step函数来实现具体的更新逻辑.  
-如果动作结束了,就把它停止并且从管理器中移除.  
-可能有人就要问了,管理器是怎么知道动作是否结束呢?  
-别着急,下面就来讲一下.  
+
+可以看到,每一次更新,管理器遍历了存放动作的集合, 
+如果当前动作不为空, 
+就调用step函数来实现具体的更新逻辑. 
+如果动作结束了,就把它停止并且从管理器中移除. 
+可能有人就要问了,管理器是怎么知道动作是否结束呢? 
+别着急,下面就来讲一下. 
 ### 动作的结束
-通过查看继承关系可以知道,动作有actionInterval(持续动作)和  
-actionInstant(瞬时动作).  
-这两个都继承了FiniteTimeAction(加了时间的动作类).  
-FiniteTimeAction又继承了Action(最基本的动作类).  
+通过查看继承关系可以知道,动作有actionInterval(持续动作)和 
+actionInstant(瞬时动作). 
+这两个都继承了FiniteTimeAction(加了时间的动作类). 
+FiniteTimeAction又继承了Action(最基本的动作类). 
 瞬时动作没什么好说的,直接看持续动作的更新类:
+
 {% highlight cpp %}
+
 void ActionInterval::step(float dt)
 {
     if (_firstTick)//第一次触发
@@ -137,11 +147,13 @@ void ActionInterval::step(float dt)
     _done = _elapsed >= _duration;
 }
 {% endhighlight %}
-最后一行代码是重点,如果持续的时间大于设定的总时间,  
-那么这个动作被标记完成,会被管理器干掉.  
+
+最后一行代码是重点,如果持续的时间大于设定的总时间, 
+那么这个动作被标记完成,会被管理器干掉. 
 ### 疑问
-可以发现一个细节:  
-判断是放在更新之后的,  
-也就是说动作是在下一帧才真正移除的.  
-具体是什么原因我也不清楚,  
-有知道的可以告诉下我哈.  
+
+可以发现一个细节: 
+判断是放在更新之后的, 
+也就是说动作是在下一帧才真正移除的. 
+具体是什么原因我也不清楚, 
+有知道的可以告诉下我哈. 

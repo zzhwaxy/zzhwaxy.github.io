@@ -11,9 +11,9 @@ title: 8086汇编环境的搭建 下
 我们也不例外.  
 为了方便,我们使用notepad++来编写汇编代码.  
 这是我提前花了几分钟写的一个demo.  
+
 #### 功能:在屏幕中间显示HelloWorld
-#### 文件名:hello.asm(之所以不起名HelloWorld.asm是因为  
-#### 文件名不能超过8个字符)  
+#### 文件名:hello.asm(之所以不起名HelloWorld.asm是因为文件名不能超过8个字符) 
 代码如下:  
 {% highlight m68k %}
 assume cs:code 
@@ -43,13 +43,20 @@ end start
 **如果利用系统的中断这个程序会更短**  
 ## 编译->链接->运行
 通过masm.exe对整个代码进行编译,  
-* masm hello;  (加分号是为了省去中间步骤,节约时间)  
+```shell
+ masm hello;  (加分号是为了省去中间步骤,节约时间)  
+```
 
-通过link.exe对代码进行链接   
-* link hello;  
+通过link.exe对代码进行链接
 
-最后运行代码  
-* hello.exe   
+```shell
+ link hello;
+```
+
+最后运行代码 
+```shell
+ hello.exe
+```
 
 整个过程可以表示为:  
 hello.asm->hello.obj->hello.exe   
