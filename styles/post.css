@@ -18,6 +18,7 @@ body {
 .content-area {
     box-sizing: border-box;
     background-color: #FFF;
+    border: 1px solid #ddd;
     border-radius: 5px;
     width: 60%;
     margin: 20px;
