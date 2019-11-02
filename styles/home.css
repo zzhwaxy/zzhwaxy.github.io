@@ -105,12 +105,12 @@ a:hover {
     font-weight: bold;
     flex: 1;
     font-family: angelinaFont;
-    color: #5151;
+    color: #fff;
+    text-shadow:0px 0px 8px #fff, 0px 0px 42px #f72, 0px 0px 72px #f84,0px 0px 150px #fa5;
+
+
 }
 
-.topbar-mine a:hover {
-    color: #ff9600;
-}
 .topbar-button {
     color: #fff;
     background-color: rgba(10,10,0,0.7);
@@ -139,8 +139,14 @@ a:hover {
 .topbar-music {
     font-size: 30px;
     margin-left: -10px;
-    margin-top: 10px;
+    margin-top: 25px;
     color: #fafafa;
+}
+
+.topbar-cover img{
+    margin-left: 45px;
+    width: 200px;
+    border-radius: 100px;
 }
 
 .topbar-button a {
