@@ -97,6 +97,7 @@ a:hover {
 
 .topbar-box {
     position: absolute;
+    z-index: 10;
 }
 .topbar-mine {
     font-size: 45px;
@@ -145,8 +146,9 @@ a:hover {
 
 .topbar-cover img{
     margin-left: 45px;
+    padding-top: 10px;
     width: 200px;
-    border-radius: 100px;
+    border-radius: 100%;
 }
 
 .topbar-button a {

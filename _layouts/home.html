@@ -8,7 +8,7 @@
         <link rel="stylesheet" media="screen and (min-width: 600px)" href="{{site.url}}/styles/home.css">
         <link rel="stylesheet" media="screen and (max-width: 600px)" href="{{site.url}}/styles/home_mobile.css">
         <link rel="stylesheet" media="screen and (min-width: 600px)" href="{{site.url}}/styles/bg.css">
-        <link rel="stylesheet" type="text/css" href="assets/waifu.css"/>
+        <link rel="stylesheet" type="text/css" href="live2d/waifu.css"/>
         <style type="text/css">
          .cb-slideshow li:nth-child(1)
          span { background-image: url(../images/background.jpg);}
@@ -33,9 +33,9 @@
             </div>
         </div>
         <script src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
-        <script src="assets/waifu-tips.js"></script>
-        <script src="assets/live2d.js"></script>
-        <script src="assets/jquery-ui.min.js"></script>
+        <script src="live2d/waifu-tips.js"></script>
+        <script src="live2d/live2d.js"></script>
+        <script src="live2d/jquery-ui.min.js"></script>
         <script type="text/javascript">
          /* 可直接修改部分参数 */
          live2d_settings['modelId'] = 1;                  // 默认模型 ID
@@ -44,7 +44,7 @@
          live2d_settings['canCloseLive2d'] = false;       // 隐藏 关闭看板娘 按钮
          live2d_settings['canTurnToHomePage'] = false;    // 隐藏 返回首页 按钮
          /* 在 initModel 前添加 */
-         initModel("assets/waifu-tips.json")
+         initModel("live2d/waifu-tips.json")
         </script>
     </head>
     <body>
