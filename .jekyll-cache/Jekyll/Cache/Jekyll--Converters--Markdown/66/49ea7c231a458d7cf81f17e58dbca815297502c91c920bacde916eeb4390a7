@@ -19,15 +19,15 @@
 <span class="nl">code</span> <span class="nv">segment</span>
 <span class="nl">start:</span><span class="nv">mov</span> <span class="nv">ax</span><span class="p">,</span><span class="nv">data</span>
       <span class="nv">mov</span> <span class="kt">ds</span><span class="p">,</span><span class="nv">ax</span>
-      <span class="nv">mov</span> <span class="nv">ax</span><span class="p">,</span><span class="mi">0</span><span class="nv">b800h</span> <span class="c1">;显存缓存区地址
-</span>      <span class="nv">mov</span> <span class="nv">es</span><span class="p">,</span><span class="nv">ax</span>
-      <span class="nv">mov</span> <span class="nv">cx</span><span class="p">,</span><span class="mi">12</span> <span class="c1">;字符串长度
-</span>      <span class="nv">mov</span> <span class="nv">si</span><span class="p">,</span><span class="mi">0</span>
-      <span class="nv">mov</span> <span class="nv">di</span><span class="p">,</span><span class="mi">160</span><span class="o">*</span><span class="mi">12</span><span class="o">+</span><span class="mi">40</span><span class="o">*</span><span class="mi">2</span><span class="o">-</span><span class="mi">12</span> <span class="c1">;显示到屏幕正中间,屏幕大小25*80		
-</span><span class="nl">s:</span>    <span class="nv">mov</span> <span class="nv">bl</span><span class="p">,[si]</span>
+      <span class="nv">mov</span> <span class="nv">ax</span><span class="p">,</span><span class="mi">0</span><span class="nv">b800h</span> <span class="c1">;显存缓存区地址</span>
+      <span class="nv">mov</span> <span class="nv">es</span><span class="p">,</span><span class="nv">ax</span>
+      <span class="nv">mov</span> <span class="nv">cx</span><span class="p">,</span><span class="mi">12</span> <span class="c1">;字符串长度</span>
+      <span class="nv">mov</span> <span class="nv">si</span><span class="p">,</span><span class="mi">0</span>
+      <span class="nv">mov</span> <span class="nv">di</span><span class="p">,</span><span class="mi">160</span><span class="o">*</span><span class="mi">12</span><span class="o">+</span><span class="mi">40</span><span class="o">*</span><span class="mi">2</span><span class="o">-</span><span class="mi">12</span> <span class="c1">;显示到屏幕正中间,屏幕大小25*80		</span>
+<span class="nl">s:</span>    <span class="nv">mov</span> <span class="nv">bl</span><span class="p">,[si]</span>
       <span class="nv">mov</span> <span class="nv">al</span><span class="p">,</span><span class="nv">bl</span>
-      <span class="nv">mov</span> <span class="nv">ah</span><span class="p">,</span><span class="mi">2</span> <span class="c1">;绿色
-</span>      <span class="nv">mov</span> <span class="nv">es</span><span class="o">:</span><span class="p">[di],</span><span class="nv">ax</span>
+      <span class="nv">mov</span> <span class="nv">ah</span><span class="p">,</span><span class="mi">2</span> <span class="c1">;绿色</span>
+      <span class="nv">mov</span> <span class="nv">es</span><span class="o">:</span><span class="p">[di],</span><span class="nv">ax</span>
       <span class="k">add</span> <span class="nv">di</span><span class="p">,</span><span class="mi">2</span>
       <span class="nv">inc</span> <span class="nv">si</span>
       <span class="nv">loop</span> <span class="nv">s</span>
