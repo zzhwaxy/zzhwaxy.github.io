@@ -1,0 +1,108 @@
+I"�<h2 id="前言">前言</h2>
+
+<p>最近买了个香港的VPS用来搭梯子。</p>
+
+<p>心想着：不是刚好有个服务器，顺便把博客搬过去。</p>
+
+<p>还能加快访问速度，一举两得。</p>
+
+<h2 id="环境搭建">环境搭建</h2>
+
+<p>在Centos7上安装<strong>ruby</strong>环境和<strong>Jekyll</strong>。</p>
+
+<p>我是看的这篇博客 <a href="https://cloud.tencent.com/developer/article/1453573">地址</a>。</p>
+
+<p>搭建完以后，如果你用<strong>jekyll serve -H 0.0.0.0 -P 80 –detach –trace</strong>这条命令来运行，会收到如下错误。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rom /usr/local/rvm/rubies/ruby-2.6.3/lib/ruby/2.6.0/webrick/httpserver.rb:47:in `initialize'
+	 8: from /usr/local/rvm/rubies/ruby-2.6.3/lib/ruby/2.6.0/webrick/server.rb:108:in `initialize'
+	 7: from /usr/local/rvm/rubies/ruby-2.6.3/lib/ruby/2.6.0/webrick/server.rb:127:in `listen'
+	 6: from /usr/local/rvm/rubies/ruby-2.6.3/lib/ruby/2.6.0/webrick/utils.rb:65:in `create_listeners'
+	 5: from /usr/local/rvm/rubies/ruby-2.6.3/lib/ruby/2.6.0/socket.rb:762:in `tcp_server_sockets'
+	 4: from /usr/local/rvm/rubies/ruby-2.6.3/lib/ruby/2.6.0/socket.rb:227:in `foreach'
+	 3: from /usr/local/rvm/rubies/ruby-2.6.3/lib/ruby/2.6.0/socket.rb:227:in `each'
+	 2: from /usr/local/rvm/rubies/ruby-2.6.3/lib/ruby/2.6.0/socket.rb:764:in `block in tcp_server_sockets'
+	 1: from /usr/local/rvm/rubies/ruby-2.6.3/lib/ruby/2.6.0/socket.rb:201:in `listen'
+/usr/local/rvm/rubies/ruby-2.6.3/lib/ruby/2.6.0/socket.rb:201:in `bind': Permission denied - bind(2) for 0.0.0.0:80 (Errno::EACCES)
+</code></pre></div></div>
+<p>权限拒绝，那么就上网查一下呗。</p>
+
+<p>查阅了资料才发现，Linux只有root用户才能使用1024以下的端口。</p>
+
+<p>说白了就是80端口不给用呗。</p>
+
+<p>重新运行命令<strong>jekyll serve -H 0.0.0.0 -P 3000 –detach –trace</strong>。</p>
+
+<p>没想到还是不行。</p>
+
+<p>我于是去问了一下SugerHosts的客服。</p>
+
+<p>他是这么回答的。</p>
+
+<blockquote>
+  <blockquote>
+    <blockquote>
+      <p>DECADE云服务器默认开放22、80和443端口，如果需要使用其他端口需要在防火墙功能中添加允许的IN类型端口</p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<p>于是去防火墙控制板把端口开了。</p>
+
+<p>然而每次访问需要加端口号，感觉就很蠢。</p>
+
+<p>接下来会用到转口转发来实现无端口号访问。</p>
+
+<h2 id="nginx端口转发">Nginx端口转发</h2>
+
+<p>首先安装Nginx。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo yum -y install nginx
+</code></pre></div></div>
+
+<p>找到配置文件的位置。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo nginx -t
+</code></pre></div></div>
+<p>设置转发。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>server {
+        listen       80 default_server;
+        listen       [::]:80 default_server;
+        server_name  127.0.0.0.1;
+        root         /usr/share/nginx/html;
+
+        # Load configuration files for the default server block.
+        include /etc/nginx/default.d/*.conf;
+
+        location / {
+        proxy_pass http://127.0.0.1:3000;
+        proxy_redirect default;
+        }
+
+
+        error_page 404 /404.html;
+            location = /40x.html {
+        }
+
+        error_page 500 502 503 504 /50x.html;
+            location = /50x.html {
+        }
+    }
+</code></pre></div></div>
+
+<h2 id="域名">域名</h2>
+
+<p>接下来就是用域名绑定服务器了。</p>
+
+<p>我原来使用CloudFlare做域名解析。</p>
+
+<p>现在可以直接把CLoudFlare上的域名删了，直接从域名购买商处添加对应的A记录和地址。</p>
+
+<p>这样就大功告成了。</p>
+
+<p>测试后开了梯子网页是秒开的，国内的话稍微慢一点。</p>
+
+<p>还有个小问题，网易云由于版权的原因，国外的话音乐外链可能听不了。</p>
+
+:ET
