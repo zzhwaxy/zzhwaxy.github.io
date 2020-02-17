@@ -1,4 +1,4 @@
-I"<h2 id="前言">前言</h2>
+I"h<h2 id="前言">前言</h2>
 
 <p>最近买了个香港的VPS用来搭梯子。</p>
 
@@ -68,29 +68,30 @@
 </code></pre></div></div>
 <p>设置转发。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>server {
+<p>```
+server {
         listen       80 default_server;
         listen       [::]:80 default_server;
         server_name  127.0.0.0.1;
-        root         /usr/share/nginx/html;
+        root         /usr/share/nginx/html;</p>
 
-        # Load configuration files for the default server block.
-        include /etc/nginx/default.d/*.conf;
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    # Load configuration files for the default server block.
+    include /etc/nginx/default.d/*.conf;
 
-        location / {
-        proxy_pass http://127.0.0.1:3000;
-        proxy_redirect default;
-        }
-
-
-        error_page 404 /404.html;
-            location = /40x.html {
-        }
-
-        error_page 500 502 503 504 /50x.html;
-            location = /50x.html {
-        }
+    location / {
+    proxy_pass http://127.0.0.1:3000;
+    proxy_redirect default;
     }
+
+
+    error_page 404 /404.html;
+        location = /40x.html {
+    }
+
+    error_page 500 502 503 504 /50x.html;
+        location = /50x.html {
+    }
+} ``**
 </code></pre></div></div>
 
 <h2 id="域名">域名</h2>
@@ -103,8 +104,20 @@
 
 <p>这样就大功告成了。</p>
 
-<p>测试后开了梯子网页是秒开的，国内的话稍微慢一点。</p>
+<p>测试中开了梯子网页是秒开的，国内的话稍微慢一点。</p>
 
 <p>还有个小问题，网易云由于版权的原因，国外的话音乐外链可能听不了。</p>
+
+<h2 id="ssl证书">SSL证书</h2>
+
+<p>获取免费的Let’s Encrypt证书 [地址](https://freessl.cn/**。</p>
+
+<p>这个证书的最大好处就在于可靠性高，不过三个月得换一次。</p>
+
+<p>把生成的证书用scp命令传到服务器上来。</p>
+
+<p>再用nginx配置ssl证书。</p>
+
+<p>这样，网站就可以同时用http和https访问了。</p>
 
 :ET
