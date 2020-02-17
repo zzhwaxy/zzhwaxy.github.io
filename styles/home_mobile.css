@@ -117,6 +117,7 @@ a {
     color: #888;
     font-size: 18px;
     font-family: angelinaFont;
+    display: none;
 }
 
 .slogan {
