@@ -96,7 +96,7 @@ server {
             location = /50x.html {
         }
     }
-``**
+```
 
 ## 域名
 
@@ -114,13 +114,17 @@ server {
 
 ## SSL证书
 
-获取免费的Let's Encrypt证书 [地址](https://freessl.cn/**。
+获取免费的Let's Encrypt证书 [地址](https://freessl.cn/)。
 
 这个证书的最大好处就在于可靠性高，不过三个月得换一次。
 
 把生成的证书用scp命令传到服务器上来。
 
 再用nginx配置ssl证书。
+
+nginx默认用户是nobody，和启动用户不一致，可能会导致403错误。
+
+把nginx的用户改成root就行了。
 
 这样，网站就可以同时用http和https访问了。
 

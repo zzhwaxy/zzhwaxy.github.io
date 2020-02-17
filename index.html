@@ -3,13 +3,32 @@ layout: home
 title: 更新测试中
 ---
 
-<div class="topbar-box">
-    <div class="topbar-cover">
-        <img src="images/benzi.png">
+<div class="left">
+    
+    <div class="topbar-b">
+        <div class="topbar-cover">
+            <img src="images/benzi.png">
+        </div>
+        <div class="topbar-mine">
+            <p herf="">一剑名动江湖</p>
+            <p herf="">喜欢折腾技术和新事物</p>
+        </div>
     </div>
-    <div class="slogan">
-        喜欢折腾技术和新事物
+    <div class="topbar-b">
+        <div class="topbar-button">
+            <a href="index.html">Home</a>
+        </div>
+        <div class="topbar-button">
+            <a href="tags.html">Tags</a>
+        </div>
+        <div class="topbar-button">
+            <a href="feed.xml">Feeds</a>
+        </div>
+        <div class="topbar-button">
+            <a href="about.html">About</a>
+        </div>
     </div>
+
     <div class="topbar-chess">
         ♜ ♞ ♝ ♛ ♚ ♝ ♞ ♜
     </div>
@@ -18,58 +37,42 @@ title: 更新测试中
     </div>
 
 </div>
-<div class="topbar">
-    <div class="topbar-mine">
-        <p herf="">一剑名动江湖</p>
-    </div>
-    
-    <div class="topbar-button">
-        <a href="index.html">Home</a>
-    </div>
-    <div class="topbar-button">
-        <a href="tags.html">Tags</a>
-    </div>
-    <div class="topbar-button">
-        <a href="feed.xml">Feeds</a>
-    </div>
-    <div class="topbar-button">
-        <a href="about.html">About</a>
-    </div>
-</div>
 
-<ul>
-    {% for post in site.posts %}
+<div class="right">
+    <ul>
+        {% for post in site.posts %}
 
-    <li class="post-line">
-        <a
-            class="post-title"
-            href="{{ site.baseurl }}{{ post.url }}"
-        >
-            {{ post.title }}
-        </a>
+        <li class="post-line">
+            <a
+                class="post-title"
+                href="{{ site.baseurl }}{{ post.url }}"
+            >
+                {{ post.title }}
+            </a>
 
-        <div class="post-summary">
-            {{ post.content | strip_html | truncate: 80, " ..." }}
-        </div>
-        <div class="post-info">
-            <div class="category-area">
-                {% for category in post.categories %}
-                <a href="{{ site.url }}/tags.html#{{ category }}">
-                    <div class="category">
-                        {{ category }}
+            <div class="post-summary">
+                {{ post.content | strip_html | truncate: 80, " ..." }}
+            </div>
+            <div class="post-info">
+                <div class="category-area">
+                    {% for category in post.categories %}
+                    <a href="{{ site.url }}/tags.html#{{ category }}">
+                        <div class="category">
+                            {{ category }}
+                        </div>
+                    </a>
+                    {% endfor %}
+                </div>
+                <div class="right-info-area">
+                    <div class="char-counter">
+                        字数 {{ post.content | strip_html | strip_newlines | remove: " " | size }}
                     </div>
-                </a>
-                {% endfor %}
-            </div>
-            <div class="right-info-area">
-                <div class="char-counter">
-                    字数 {{ post.content | strip_html | strip_newlines | remove: " " | size }}
-                </div>
-                <div class="post-date">
-                    {{ post.date | date: "%Y-%m-%d" }}
+                    <div class="post-date">
+                        {{ post.date | date: "%Y-%m-%d" }}
+                    </div>
                 </div>
             </div>
-        </div>
-    </li>
-    {% endfor %}
-</ul>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
