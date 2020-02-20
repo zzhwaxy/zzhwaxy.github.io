@@ -35,8 +35,8 @@ li {
     color: #73BC83;
 }
 .box {
-    width: 1000px;
-    height: 640px;
+    width: 55%;
+    height: 70%;
     background-color:rgba(0,0,0,0.78);
     border-radius: 3px;
     position: absolute;

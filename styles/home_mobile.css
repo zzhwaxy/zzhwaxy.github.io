@@ -26,6 +26,10 @@ a {
     display: none;
 }
 
+.left{
+    display: none;
+}
+
 .motto {
     font-size: 18px;
     color: #AAA;

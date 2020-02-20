@@ -126,28 +126,19 @@ a:hover {
     font-size: 25px;
     margin:0 auto;
 }
-.topbar-chess {
-    font-size: 30px;
-    padding-top: 40px;
-    letter-spacing:9px;
-    color: #420303;
-    margin:0 auto;
-}
 
 .topbar-music {
+    opacity:0.5;
     position:fixed;
     bottom:0;
-    right:0;
+    left:0;
     z-index:30;
-    opacity:0.5;
-    padding-top:30px;
-    margin-bottom:70px;
 }
 
 .topbar-cover img{
+    opacity:0.3;
     padding-top: 20px;
     margin-left:20px;
-
     width: 130px;
     border-radius: 100%;
     
