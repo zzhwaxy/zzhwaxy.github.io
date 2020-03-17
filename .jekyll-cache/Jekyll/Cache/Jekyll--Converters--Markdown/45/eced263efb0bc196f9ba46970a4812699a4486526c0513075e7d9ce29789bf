@@ -1,0 +1,169 @@
+I"�<h2 id="前言">前言</h2>
+<p>最近做题目需要Linux环境跑程序。Mac上运行不了，我又不太想用Ubuntu这种发行版。</p>
+
+<p>于是装了个Arch的虚拟机。折腾了一下，差不多勉强能用的程度。</p>
+
+<p><img src="/images/arch_neofetch.jpg" alt="" /></p>
+
+<p>这样看有点花。</p>
+
+<p>做题目的时候其实可以不设置透明度，然后平时用的时候再调回来。</p>
+
+<p><img src="/images/arch_pwndbg.jpg" alt="" /></p>
+
+<h2 id="安装系统">安装系统</h2>
+
+<p>首先第一步，检查 <strong><em>引导方式</em></strong> 。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ls /sys/firmware/efi/efivars
+</code></pre></div></div>
+<p>没有这个文件，说明是BIOS引导，否则是UEFI引导。</p>
+
+<h3 id="检查网络">检查网络</h3>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ping www.baidu.com -c 4
+</code></pre></div></div>
+<p>因为在虚拟机里所以默认是正常的。</p>
+
+<h3 id="分区">分区</h3>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cfdisk /dev/sda
+</code></pre></div></div>
+<p>直接用图形化的方式把硬盘分成一整块，这里选择ISO模式，并且使它可启动。</p>
+
+<h3 id="格式化">格式化</h3>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mkfs.ext4 /dev/sda1
+</code></pre></div></div>
+
+<h3 id="挂载">挂载</h3>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mount /dev/sda1 /mnt
+</code></pre></div></div>
+
+<h3 id="使用国内镜像">使用国内镜像</h3>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>vim /etc/pacman.d/mirrorlist
+</code></pre></div></div>
+<p>用vim把里面China的源移到最上面去。</p>
+
+<h3 id="安装系统-1">安装系统</h3>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pacstrap /mnt base base-devel linux linux-headers
+</code></pre></div></div>
+<h3 id="生成分区表">生成分区表</h3>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>genfstab -U /mnt &gt;&gt; /mnt/etc/fstab
+</code></pre></div></div>
+
+<h3 id="进入新系统">进入新系统</h3>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>arch-chroot /mnt
+</code></pre></div></div>
+
+<h3 id="安装bootloader">安装Bootloader</h3>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pacman -S os-prober ntfs-3g
+</code></pre></div></div>
+
+<h3 id="生成引导分区">生成引导分区</h3>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pacman -S grub
+grub-install /dev/sda
+grub-mkconfig -o /boot/grub/grub.cfg
+</code></pre></div></div>
+<h3 id="安装必备软件">安装必备软件</h3>
+
+<p>因为重启后大概率上不了网，所以需要先把网络环境搭建好。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pacman -S vim  networkmanager
+systemctl enable networkmanager
+systemctl start  networkmanager
+</code></pre></div></div>
+
+<h3 id="退出当前系统">退出当前系统</h3>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>exit
+</code></pre></div></div>
+<h3 id="取消挂载">取消挂载</h3>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>umount /mnt
+</code></pre></div></div>
+
+<h3 id="重启">重启</h3>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>reboot
+</code></pre></div></div>
+
+<h2 id="安装i3桌面">安装i3桌面</h2>
+
+<p>重启后就可以进行桌面的安装，照我的性格肯定是用i3了。</p>
+
+<p>嫌麻烦随便装一个别的也行。</p>
+
+<h3 id="安装i3">安装i3</h3>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pacman -S i3
+pacman -S lightdm-gtk-greeter
+systemctl enable lightdm
+systemctl start lightdm
+</code></pre></div></div>
+
+<h2 id="配置">配置</h2>
+
+<h3 id="使用archlinuxcn-源">使用archlinuxcn 源</h3>
+<p>在 /etc/pacman.conf里加入</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[archlinuxcn]
+SigLevel = Optional TrustedOnly
+Server = https://mirrors.tuna.tsinghua.edu.cn/archlinuxcn/$arch
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pacman -Sy archlinuxcn-keyring
+pacman -Syy
+pacman -S yay
+</code></pre></div></div>
+
+<h3 id="安装搜狗输入法">安装搜狗输入法</h3>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo pacman -S fcitx fcitx-configtool fcitx-gtk2 fcitx-gtk3 fcitx-qt4 fcitx-qt5 fcitx-sogoupinyin
+</code></pre></div></div>
+
+<p>在.xprofile中添加</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>export GTK_IM_MODULE=fcitx
+export QT_IM_MODULE=fcitx
+export XMODIFIERS="@im=fcitx"
+</code></pre></div></div>
+
+<h3 id="安装浏览器">安装浏览器</h3>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pacman -S firefox
+</code></pre></div></div>
+
+<h3 id="终端配置">终端配置</h3>
+
+<h4 id="shell">SHELL</h4>
+<p>使用zsh，oh my zsh并配置主题和插件</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pacman -S zsh 
+chsh -s $(which zsh)
+sh -c "$(wget https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O -)"
+git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+</code></pre></div></div>
+<h4 id="terminal">Terminal</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pacman -S xfce4-terminal
+</code></pre></div></div>
+
+<h5 id="终端配色">终端配色</h5>
+
+<p>下载主体并安装</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git clone https://github.com/netzverweigerer/xfce4-terminal-colorschemes.git
+</code></pre></div></div>
+<h3 id="文件共享">文件共享</h3>
+
+<p>安装了好几次Parallel tools都不成功。看报错似乎是因为Linux内核太新了不支持，没办法，只能等了。</p>
+
+<p>配个samba先凑合者用吧。</p>
+
+:ET

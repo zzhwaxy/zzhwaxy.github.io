@@ -1,0 +1,41 @@
+I"�<h2 id="前言">前言</h2>
+<p>最近做题目需要Linux环境跑程序。Mac上运行不了，我又不太想用Ubuntu这种发行版。</p>
+
+<p>于是装了个Arch的虚拟机。折腾了一下，差不多勉强能用的程度。</p>
+
+<p><img src="/images/arch_neofetch.jpg" alt="" /></p>
+
+<p>这样看有点花。</p>
+
+<p>做题目的时候其实可以不设置透明度，然后平时用的时候再调回来。</p>
+
+<p><img src="/images/arch_pwndbg.jpg" alt="" /></p>
+
+<h2 id="安装">安装</h2>
+
+<p>首先第一步，检查 <strong><em>引导方式</em></strong> 。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ls /sys/firmware/efi/efivars
+</code></pre></div></div>
+<p>没有这个文件，说明是BIOS引导，否则是UEFI引导。</p>
+
+<h3 id="检查网络">检查网络</h3>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ping www.baidu.com -c 4
+</code></pre></div></div>
+<p>因为在虚拟机里所以默认是正常的。</p>
+
+<h3 id="分区">分区</h3>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cfdisk /dev/sda
+</code></pre></div></div>
+<p>直接用图形化的方式把硬盘分成一整块，这里选择ISO模式，并且使它可启动。</p>
+
+<h3 id="格式化">格式化</h3>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mkfs.ext4 /dev/sda1
+</code></pre></div></div>
+
+<h2 id="配置">配置</h2>
+
+:ET
