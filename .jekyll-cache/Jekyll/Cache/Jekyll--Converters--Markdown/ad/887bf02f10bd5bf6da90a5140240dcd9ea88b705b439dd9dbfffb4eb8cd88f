@@ -1,0 +1,80 @@
+I"�<h2 id="前言">前言</h2>
+
+<p>以前都是OD用的比较多，也就是最近才开始用GDB，因为需要调试Linux上的程序。</p>
+
+<p>GDB默认不好用，所以需要Peda，Gef，Pwndbg这些插件。</p>
+
+<p>虽然使用了插件以后调试信息更加丰富，但是使用体验非常不好。</p>
+
+<p>对比OD，有如下几个缺点。</p>
+
+<ul>
+  <li>
+    <p>1.布局非常不合理，浪费空间的同时关键的反汇编窗口只能看到寥寥几行，分析起来非常难受</p>
+  </li>
+  <li>
+    <p>2.因为是竖着排列的，所以要看上一条命令的输出就很难。</p>
+  </li>
+  <li>
+    <p>3.有时候命令输多了，其他窗口就被挤占了空间，调试起来更加难受</p>
+  </li>
+</ul>
+
+<p>想起来Emacs里的GDB默认有个图形界面，于是想着针对它改造一下</p>
+
+<h2 id="效果图">效果图</h2>
+
+<p><img src="/images/gdb_custom.jpg" alt="" /></p>
+
+<p>根据我自己的需求，使反汇编窗口最大化，右上角是寄存器窗口，左下用来输入和查看GDB命令，有下角是IO窗口。</p>
+
+<p>这些只是初步的设置，只能达到最基本的使用需求。</p>
+
+<p>堆栈窗口的显示，反汇编窗口的语法高亮，调试信息的增加这些都需要好好研究下。</p>
+
+<h3 id="配置">配置</h3>
+
+<p>在<em>user-config</em>中加入如下代码。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>(defun dotspacemacs/user-config ()
+  (set-frame-parameter (selected-frame) 'alpha '(90 92)) ;设置窗口透明度90%
+
+  (global-set-key (kbd "&lt;f2&gt;") 'gdb) ;run gdb 
+  (global-set-key (kbd "&lt;f4&gt;") 'gud-cont) ;continue
+  (global-set-key (kbd "&lt;f5&gt;") 'gud-go) ;run program
+  (global-set-key (kbd "&lt;f7&gt;") 'gud-stepi) ; si
+  (global-set-key (kbd "&lt;f8&gt;") 'gud-nexti) ; ni
+  
+  (setq gdb-many-windows t) ; 默认开启多窗口模式
+  
+  (defadvice gdb-setup-windows (after activate)
+    (gdb-setup-my-windows) ; 重新修改布局
+    )
+
+  (defun gdb-setup-my-windows ()
+    (set-window-dedicated-p (selected-window) nil)
+    (switch-to-buffer gud-comint-buffer)
+    (gdb-display-disassembly-buffer) ; 打开反汇编窗口
+    (gdb-display-io-buffer) ; 打开输入输出窗口 
+    (delete-other-windows)
+    (let
+        ((win0 (selected-window))             ; source
+         (win1 (split-window-horizontally
+                (floor (* 0.67 (window-width)))))   ; gdb
+         (win2 (split-window-vertically
+                (floor (* 0.8 (window-body-height))))) ; bp
+         )
+      (gdb-set-window-buffer (gdb-get-buffer-create 'gdb-disassembly-buffer))
+      (select-window win1)
+      (split-window-vertically (floor (* 0.6 (window-body-height))))
+      (gdb-set-window-buffer (gdb-get-buffer-create 'gdb-registers-buffer))
+      (other-window 1)
+      (gdb-set-window-buffer (gdb-get-buffer-create 'gdb-inferior-io))
+      (select-window win2)
+      )
+    )
+  )
+
+</code></pre></div></div>
+
+:ET

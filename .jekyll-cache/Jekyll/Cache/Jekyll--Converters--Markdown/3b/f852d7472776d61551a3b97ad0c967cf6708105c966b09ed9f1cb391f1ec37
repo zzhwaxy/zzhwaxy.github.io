@@ -1,0 +1,82 @@
+I"�-<h2 id="前言">前言</h2>
+
+<p>以前都是OD用的比较多，也就是最近才开始用GDB，因为需要调试Linux上的程序。</p>
+
+<p>GDB默认不好用，所以需要Peda，Gef，Pwndbg这些插件。</p>
+
+<p>虽然使用了插件以后调试信息更加丰富，但是使用体验非常不好。</p>
+
+<p>对比OD，有如下几个缺点。</p>
+
+<ul>
+  <li>
+    <p>1.布局非常不合理，浪费空间的同时关键的反汇编窗口只能看到寥寥几行，分析起来非常难受</p>
+  </li>
+  <li>
+    <p>2.因为是竖着排列的，所以要看上一条命令的输出就很难。</p>
+  </li>
+  <li>
+    <p>3.有时候命令输多了，其他窗口就被挤占了空间，调试起来更加难受</p>
+  </li>
+</ul>
+
+<p>想起来Emacs里的GDB默认有个图形界面，于是想着针对它改造一下</p>
+
+<h2 id="效果图">效果图</h2>
+
+<p><img src="/images/gdb_custom.jpg" alt="" /></p>
+
+<p>根据我自己的需求，使反汇编窗口最大化，右上角是寄存器窗口，左下用来输入和查看GDB命令，有下角是IO窗口。</p>
+
+<p>这些只是初步的设置，只能达到最基本的使用需求。</p>
+
+<p>堆栈窗口的显示，反汇编窗口的语法高亮，调试信息的增加这些都需要好好研究下。</p>
+
+<h3 id="配置">配置</h3>
+
+<p>在<em>user-config</em>中加入如下代码即可。</p>
+
+<p>快捷键设置上我模仿了OD的快捷键。</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="p">(</span><span class="n">defun</span> <span class="n">dotspacemacs</span><span class="o">/</span><span class="n">user</span><span class="o">-</span><span class="n">config</span> <span class="p">()</span>
+  <span class="p">(</span><span class="n">set</span><span class="o">-</span><span class="n">frame</span><span class="o">-</span><span class="n">parameter</span> <span class="p">(</span><span class="n">selected</span><span class="o">-</span><span class="n">frame</span><span class="p">)</span> <span class="err">'</span><span class="n">alpha</span> <span class="err">'</span><span class="p">(</span><span class="mi">90</span> <span class="mi">92</span><span class="p">))</span> <span class="p">;</span><span class="err">设置窗口透明度</span><span class="mi">90</span><span class="o">%</span>
+
+  <span class="p">(</span><span class="n">global</span><span class="o">-</span><span class="n">set</span><span class="o">-</span><span class="n">key</span> <span class="p">(</span><span class="n">kbd</span> <span class="s">"&lt;f2&gt;"</span><span class="p">)</span> <span class="err">'</span><span class="n">gdb</span><span class="p">)</span> <span class="p">;</span><span class="n">run</span> <span class="nf">gdb</span> 
+  <span class="p">(</span><span class="n">global</span><span class="o">-</span><span class="n">set</span><span class="o">-</span><span class="n">key</span> <span class="p">(</span><span class="n">kbd</span> <span class="s">"&lt;f4&gt;"</span><span class="p">)</span> <span class="err">'</span><span class="n">gud</span><span class="o">-</span><span class="n">cont</span><span class="p">)</span> <span class="p">;</span><span class="k">continue</span>
+  <span class="p">(</span><span class="n">global</span><span class="o">-</span><span class="n">set</span><span class="o">-</span><span class="n">key</span> <span class="p">(</span><span class="n">kbd</span> <span class="s">"&lt;f5&gt;"</span><span class="p">)</span> <span class="err">'</span><span class="n">gud</span><span class="o">-</span><span class="n">go</span><span class="p">)</span> <span class="p">;</span><span class="n">run</span> <span class="nf">program</span>
+  <span class="p">(</span><span class="n">global</span><span class="o">-</span><span class="n">set</span><span class="o">-</span><span class="n">key</span> <span class="p">(</span><span class="n">kbd</span> <span class="s">"&lt;f7&gt;"</span><span class="p">)</span> <span class="err">'</span><span class="n">gud</span><span class="o">-</span><span class="n">stepi</span><span class="p">)</span> <span class="p">;</span> <span class="n">si</span>
+  <span class="p">(</span><span class="n">global</span><span class="o">-</span><span class="n">set</span><span class="o">-</span><span class="n">key</span> <span class="p">(</span><span class="n">kbd</span> <span class="s">"&lt;f8&gt;"</span><span class="p">)</span> <span class="err">'</span><span class="n">gud</span><span class="o">-</span><span class="n">nexti</span><span class="p">)</span> <span class="p">;</span> <span class="n">ni</span>
+  
+  <span class="p">(</span><span class="n">setq</span> <span class="n">gdb</span><span class="o">-</span><span class="n">many</span><span class="o">-</span><span class="n">windows</span> <span class="n">t</span><span class="p">)</span> <span class="p">;</span> <span class="err">默认开启多窗口模式</span>
+  
+  <span class="p">(</span><span class="n">defadvice</span> <span class="n">gdb</span><span class="o">-</span><span class="n">setup</span><span class="o">-</span><span class="n">windows</span> <span class="p">(</span><span class="n">after</span> <span class="n">activate</span><span class="p">)</span>
+    <span class="p">(</span><span class="n">gdb</span><span class="o">-</span><span class="n">setup</span><span class="o">-</span><span class="n">my</span><span class="o">-</span><span class="n">windows</span><span class="p">)</span> <span class="p">;</span> <span class="err">重新修改布局</span>
+    <span class="p">)</span>
+
+  <span class="p">(</span><span class="n">defun</span> <span class="n">gdb</span><span class="o">-</span><span class="n">setup</span><span class="o">-</span><span class="n">my</span><span class="o">-</span><span class="n">windows</span> <span class="p">()</span>
+    <span class="p">(</span><span class="n">set</span><span class="o">-</span><span class="n">window</span><span class="o">-</span><span class="n">dedicated</span><span class="o">-</span><span class="n">p</span> <span class="p">(</span><span class="n">selected</span><span class="o">-</span><span class="n">window</span><span class="p">)</span> <span class="n">nil</span><span class="p">)</span>
+    <span class="p">(</span><span class="k">switch</span><span class="o">-</span><span class="n">to</span><span class="o">-</span><span class="n">buffer</span> <span class="n">gud</span><span class="o">-</span><span class="n">comint</span><span class="o">-</span><span class="n">buffer</span><span class="p">)</span>
+    <span class="p">(</span><span class="n">gdb</span><span class="o">-</span><span class="n">display</span><span class="o">-</span><span class="n">disassembly</span><span class="o">-</span><span class="n">buffer</span><span class="p">)</span> <span class="p">;</span> <span class="err">打开反汇编窗口</span>
+    <span class="p">(</span><span class="n">gdb</span><span class="o">-</span><span class="n">display</span><span class="o">-</span><span class="n">io</span><span class="o">-</span><span class="n">buffer</span><span class="p">)</span> <span class="p">;</span> <span class="err">打开输入输出窗口</span> 
+    <span class="p">(</span><span class="n">delete</span><span class="o">-</span><span class="n">other</span><span class="o">-</span><span class="n">windows</span><span class="p">)</span>
+    <span class="p">(</span><span class="n">let</span>
+        <span class="p">((</span><span class="n">win0</span> <span class="p">(</span><span class="n">selected</span><span class="o">-</span><span class="n">window</span><span class="p">))</span>             
+         <span class="p">(</span><span class="n">win1</span> <span class="p">(</span><span class="n">split</span><span class="o">-</span><span class="n">window</span><span class="o">-</span><span class="n">horizontally</span>
+                <span class="p">(</span><span class="n">floor</span> <span class="p">(</span><span class="o">*</span> <span class="mi">0</span><span class="p">.</span><span class="mi">67</span> <span class="p">(</span><span class="n">window</span><span class="o">-</span><span class="n">width</span><span class="p">)))))</span>   
+         <span class="p">(</span><span class="n">win2</span> <span class="p">(</span><span class="n">split</span><span class="o">-</span><span class="n">window</span><span class="o">-</span><span class="n">vertically</span>
+                <span class="p">(</span><span class="n">floor</span> <span class="p">(</span><span class="o">*</span> <span class="mi">0</span><span class="p">.</span><span class="mi">8</span> <span class="p">(</span><span class="n">window</span><span class="o">-</span><span class="n">body</span><span class="o">-</span><span class="n">height</span><span class="p">)))))</span> 
+         <span class="p">)</span>
+      <span class="p">(</span><span class="n">gdb</span><span class="o">-</span><span class="n">set</span><span class="o">-</span><span class="n">window</span><span class="o">-</span><span class="n">buffer</span> <span class="p">(</span><span class="n">gdb</span><span class="o">-</span><span class="n">get</span><span class="o">-</span><span class="n">buffer</span><span class="o">-</span><span class="n">create</span> <span class="err">'</span><span class="n">gdb</span><span class="o">-</span><span class="n">disassembly</span><span class="o">-</span><span class="n">buffer</span><span class="p">))</span>
+      <span class="p">(</span><span class="n">select</span><span class="o">-</span><span class="n">window</span> <span class="n">win1</span><span class="p">)</span>
+      <span class="p">(</span><span class="n">split</span><span class="o">-</span><span class="n">window</span><span class="o">-</span><span class="n">vertically</span> <span class="p">(</span><span class="n">floor</span> <span class="p">(</span><span class="o">*</span> <span class="mi">0</span><span class="p">.</span><span class="mi">6</span> <span class="p">(</span><span class="n">window</span><span class="o">-</span><span class="n">body</span><span class="o">-</span><span class="n">height</span><span class="p">))))</span>
+      <span class="p">(</span><span class="n">gdb</span><span class="o">-</span><span class="n">set</span><span class="o">-</span><span class="n">window</span><span class="o">-</span><span class="n">buffer</span> <span class="p">(</span><span class="n">gdb</span><span class="o">-</span><span class="n">get</span><span class="o">-</span><span class="n">buffer</span><span class="o">-</span><span class="n">create</span> <span class="err">'</span><span class="n">gdb</span><span class="o">-</span><span class="n">registers</span><span class="o">-</span><span class="n">buffer</span><span class="p">))</span>
+      <span class="p">(</span><span class="n">other</span><span class="o">-</span><span class="n">window</span> <span class="mi">1</span><span class="p">)</span>
+      <span class="p">(</span><span class="n">gdb</span><span class="o">-</span><span class="n">set</span><span class="o">-</span><span class="n">window</span><span class="o">-</span><span class="n">buffer</span> <span class="p">(</span><span class="n">gdb</span><span class="o">-</span><span class="n">get</span><span class="o">-</span><span class="n">buffer</span><span class="o">-</span><span class="n">create</span> <span class="err">'</span><span class="n">gdb</span><span class="o">-</span><span class="n">inferior</span><span class="o">-</span><span class="n">io</span><span class="p">))</span>
+      <span class="p">(</span><span class="n">select</span><span class="o">-</span><span class="n">window</span> <span class="n">win2</span><span class="p">)</span>
+      <span class="p">)</span>
+    <span class="p">)</span>
+  <span class="p">)</span>
+</code></pre></div></div>
+
+:ET
