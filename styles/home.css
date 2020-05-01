@@ -6,14 +6,14 @@ body {
     height: 100%;
 }
 .left{
+    
     display:flex;
     flex:1;
     flex-direction:column;
+    margin-left:5%;
 }
 .right{
-    width:70%;
-    margin-top:1%;
-    margin-right:1%;
+    margin-right:5%;
 }
 
 
@@ -94,8 +94,6 @@ a:hover {
 
 .topbar-mine {
     font-size: 27px;
-    margin-left:3px;
-    margin-left:15px;
     font-weight: bold;
     font-family: angelinaFont;
     color: #420303;
@@ -106,15 +104,17 @@ a:hover {
 
 .topbar-b{
     display:flex;
+    align-items:center;
+    flex-wrap:nowrap;
+    min-width:420px;
+    justify-content:space-between;
 }
 
 .topbar-button {
-    width:80px;
+    width:83px;
+    padding:8px;
     height:auto;
-    padding:7px;
     margin-top:10px;
-    margin-left:15px;
-
     text-align:center;
     background-color: #ffffff;
     border-radius: 25px;
@@ -127,18 +127,9 @@ a:hover {
     margin:0 auto;
 }
 
-.topbar-music {
-    opacity:0.01;
-    position:fixed;
-    bottom:0;
-    left:0;
-    z-index:30;
-}
 
 .topbar-cover img{
     opacity:0.3;
-    padding-top: 20px;
-    margin-left:20px;
     width: 130px;
     border-radius: 100%;
     
