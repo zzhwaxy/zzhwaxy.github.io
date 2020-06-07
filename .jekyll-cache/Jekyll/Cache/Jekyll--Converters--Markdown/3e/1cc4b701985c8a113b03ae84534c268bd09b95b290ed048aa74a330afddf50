@@ -1,4 +1,4 @@
-I"W<h2 id="前言">前言</h2>
+I"�<h2 id="前言">前言</h2>
 <p>从搭建博客以来，已经忍受了四个多月默认的界面样式，太简陋和粗糙了，实在难以符合我的审美。无奈之下，只能使用我贫乏的前端知识来对博客进行改造和美化，大概花了两三天的样子。因为我本身并不是做前端的，所以这一块是半吊子。如果有些代码写的不那么如人意，还请见谅。</p>
 
 <h2 id="美化">美化</h2>
@@ -68,10 +68,10 @@ css代码我读了一下，就是设置六张背景图片轮询来放大加载 �
 <p>使用<a href="https://en.gravatar.com/">garvatar</a>来配置，而且生成的头像和邮箱绑定，所有网站都通用</p>
 
 <ul class="task-list">
-  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" checked="checked" /><strong><em>网易云外链</em></strong></li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" checked="checked" /><strong><em>播放音乐</em></strong></li>
 </ul>
 
-<p>增加了网易云外链，播放的是最近常听的音乐。选用日文歌是因为听不懂。这样就不会因为听歌的时候尝试理解歌词的含义而导致学习的时候分心，而且很好听，不是吗？</p>
+<p>替换网页音乐播放器为aplayer,至少比网易云外链好用</p>
 
 <ul class="task-list">
   <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" checked="checked" /><strong><em>访问速度优化</em></strong></li>
@@ -83,7 +83,7 @@ css代码我读了一下，就是设置六张背景图片轮询来放大加载 �
 
 <p>对加载时间过长的图片<a href="https://tinypng.com/">无损压缩</a></p>
 
-<p>对公共的css，js文件使用cdn 加速</p>
+<p>对公共的css，js文件使用cdn 加速，延迟加载某些js文件</p>
 
 <p>排除不需要解析的文件</p>
 

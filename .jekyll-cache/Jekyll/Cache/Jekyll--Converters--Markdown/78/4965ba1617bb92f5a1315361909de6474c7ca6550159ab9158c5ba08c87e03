@@ -1,0 +1,144 @@
+I"8<h2 id="前言">前言</h2>
+
+<p>本文是最近在学习Linux内核时的笔记，所用的源代码版本为2.6.0。</p>
+
+<h2 id="自旋锁如何实现">自旋锁如何实现</h2>
+
+<h3 id="定义">定义</h3>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">typedef</span> <span class="k">struct</span> <span class="p">{</span>
+	<span class="kt">unsigned</span> <span class="kt">long</span> <span class="n">magic</span><span class="p">;</span>
+	<span class="k">volatile</span> <span class="kt">unsigned</span> <span class="kt">long</span> <span class="n">lock</span><span class="p">;</span> <span class="c1">// 1释放锁</span>
+	<span class="k">volatile</span> <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">babble</span><span class="p">;</span>
+	<span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">module</span><span class="p">;</span>
+	<span class="kt">char</span> <span class="o">*</span><span class="n">owner</span><span class="p">;</span>
+	<span class="kt">int</span> <span class="n">oline</span><span class="p">;</span>
+<span class="p">}</span> <span class="n">spinlock_t</span><span class="p">;</span>
+</code></pre></div></div>
+
+<h3 id="实现">实现</h3>
+
+<p><em>如果不支持SMP，定义为空</em></p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#ifdef CONFIG_DEBUG_SPINLOCK
+</span><span class="cm">/*
+ * If CONFIG_SMP is unset, declare the _raw_* definitions as nops
+ */</span>
+<span class="cp">#define spin_lock_init(lock)	do { (void)(lock); } while(0)
+#define _raw_spin_lock(lock)	do { (void)(lock); } while(0)
+#define spin_is_locked(lock)	((void)(lock), 0)
+#define _raw_spin_trylock(lock)	((void)(lock), 1)
+#define spin_unlock_wait(lock)	do { (void)(lock); } while(0)
+#define _raw_spin_unlock(lock)	do { (void)(lock); } while(0)
+#endif </span><span class="cm">/* CONFIG_DEBUG_SPINLOCK */</span><span class="cp">
+</span></code></pre></div></div>
+<h3 id="加锁">加锁</h3>
+
+<p>在是否支持抢占，实现也是不同的</p>
+
+<h4 id="支持抢占">支持抢占</h4>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#define spin_lock(lock) \
+do { \
+	preempt_disable(); \ //禁止内核抢占
+</span>	<span class="k">if</span> <span class="p">(</span><span class="n">unlikely</span><span class="p">(</span><span class="o">!</span><span class="n">_raw_spin_trylock</span><span class="p">(</span><span class="n">lock</span><span class="p">)))</span> \
+		<span class="n">__preempt_spin_lock</span><span class="p">(</span><span class="n">lock</span><span class="p">);</span> \
+<span class="err">}</span> <span class="k">while</span> <span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+</code></pre></div></div>
+<h4 id="不支持抢占">不支持抢占</h4>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#define spin_lock(lock)	\
+do { \
+	preempt_disable(); \ //禁止内核抢占
+</span>	<span class="n">_raw_spin_lock</span><span class="p">(</span><span class="n">lock</span><span class="p">);</span> \
+<span class="err">}</span> <span class="k">while</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>先从简单的讲起，首先禁止了内核抢占，然后调用_raw_spin_lock 来加锁。</p>
+
+<p>由于需要保证原子性，采用汇编实现，不同的机器上的具体实现也是不同的。如图。</p>
+
+<p><img src="/images/spin_lock_version.png" alt="" /></p>
+
+<p>这里展示了我最熟悉的x86_64上的实现。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>static inline void _raw_spin_lock(spinlock_t *lock)
+{
+#ifdef CONFIG_DEBUG_SPINLOCK
+	__label__ here;
+here:
+	if (lock-&gt;magic != SPINLOCK_MAGIC) {
+printk("eip: %p\n", &amp;&amp;here);
+		BUG();
+	}
+#endif
+	__asm__ __volatile__(
+		spin_lock_string
+		:"=m" (lock-&gt;lock) : : "memory");
+}
+</code></pre></div></div>
+
+<p>关键代码在于spin_lock_string这个宏</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#define spin_lock_string \
+	"\n1:\t" \
+	"lock ; decb %0\n\t" \
+	"js 2f\n" \
+	LOCK_SECTION_START("") \
+	"2:\t" \
+	"rep;nop\n\t" \
+	"cmpb $0,%0\n\t" \
+	"jle 2b\n\t" \
+	"jmp 1b\n" \
+	LOCK_SECTION_END
+</code></pre></div></div>
+
+<p>原理：首先传入lock值，减一，lock指令用来保证原子操作</p>
+
+<p>如果为负数，则进入循环，并且不断和0比较，直到大于0，才进入临界区</p>
+
+<p>如果不为负数，直接进入临界区</p>
+
+<p>接着讲讲__preempt_spin_lock实现</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>void __preempt_spin_lock(spinlock_t *lock)
+{
+	if (preempt_count() &gt; 1) {
+		_raw_spin_lock(lock);
+		return;
+	}
+	do {
+		preempt_enable(); //允许内核抢占
+		while (spin_is_locked(lock))
+			cpu_relax();
+		preempt_disable();
+	} while (!_raw_spin_trylock(lock));
+}
+
+</code></pre></div></div>
+<p>如果preempt_count值大于一(也就是禁止内核抢占)，那么用的还是之前的实现</p>
+
+<p>先开启内核抢占，然后判断当前锁是否释放，如果不是，则循环等待释放。</p>
+
+<p>关闭内核抢占。尝试加锁。</p>
+
+<h3 id="释放锁">释放锁</h3>
+
+<p>```
+#define spin_unlock_string <br />
+	“xchgb %b0, %1” <br />
+		:”=q” (oldval), “=m” (lock-&gt;lock) <br />
+		:”0” (oldval) : “memory”</p>
+
+<p>``**</p>
+
+<p>代码很简单,直接将lock值赋值为1</p>
+
+<p><strong><em>剩下的过两天再写</em></strong>*</p>
+
+<h2 id="读写锁如何实现">读写锁如何实现</h2>
+<h2 id="互斥锁如何实现">互斥锁如何实现</h2>
+<h2 id="信号量如何实现">信号量如何实现</h2>
+
+:ET
