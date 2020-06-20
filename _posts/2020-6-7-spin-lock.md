@@ -78,7 +78,7 @@ do { \
 
 这里展示了我最熟悉的x86_64上的实现。
 
-```
+```c
 static inline void _raw_spin_lock(spinlock_t *lock)
 {
 #ifdef CONFIG_DEBUG_SPINLOCK
@@ -97,7 +97,7 @@ printk("eip: %p\n", &&here);
 
 关键代码在于spin_lock_string这个宏
 
-```
+```c
 #define spin_lock_string \
 	"\n1:\t" \
 	"lock ; decb %0\n\t" \

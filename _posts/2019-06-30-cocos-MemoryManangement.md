@@ -1,6 +1,6 @@
 ---
 layout: post
-title: 浅谈cocos2d-x的内存管理
+title: 浅谈Cocos2d-x的内存管理
 ---
 ## 前言
 和Java不同,c++中需要手动释放分配的内存.  
