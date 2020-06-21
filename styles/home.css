@@ -108,6 +108,7 @@ a:hover {
     flex-wrap:nowrap;
     min-width:420px;
     justify-content:space-between;
+    
 }
 
 .topbar-button {
@@ -127,12 +128,16 @@ a:hover {
     margin:0 auto;
 }
 
-
+.topbar-cover{
+    position:relative;
+}
 .topbar-cover img{
-    opacity:0.3;
-    width: 130px;
-    border-radius: 100%;
-    
+    width: 140px;
+    background-image: url(../images/benzi.png);
+    background-position:center;
+    background-repeat:no-repeat;
+    background-size:90px;
+    border-radius:100% ;
 }
 
 .topbar-button a {
