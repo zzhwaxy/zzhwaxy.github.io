@@ -1,0 +1,103 @@
+I"r<h2 id="前言">前言</h2>
+<p>从搭建博客以来，已经忍受了四个多月默认的界面样式，太简陋和粗糙了，实在难以符合我的审美。无奈之下，只能使用我贫乏的前端知识来对博客进行改造和美化，大概花了两三天的样子。因为我本身并不是做前端的，所以这一块是半吊子。如果有些代码写的不那么如人意，还请见谅。</p>
+
+<h2 id="美化">美化</h2>
+<p><em>针对博客的美化，已经完成的工作有</em></p>
+
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" checked="checked" /><strong><em>界面设计</em></strong></li>
+</ul>
+
+<p>是在<a href="https://manateelazycat.github.io/">manateelazycat</a>大佬的博客基础上修改的，还从其他一些网站借鉴了思路
+调整了一下样式和界面。没错，就是更加宅和二次元了！</p>
+
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" checked="checked" /><strong><em>css样式调整</em></strong></li>
+</ul>
+
+<p>这就是根据我自己的喜好调整了，比如增加了国际象棋的图标，仿终端风格的自我介绍页面，透明布局</p>
+
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" checked="checked" /><strong><em>手机端适配</em></strong></li>
+</ul>
+
+<p>使用不同的css 文件来适配布局。</p>
+
+<p>手机上界面更加简洁。</p>
+
+<p>因为我基本不用手机看技术博客。(其实是因为我懒。对每个页面都做适配的话，工作量巨大。手机端简化成一个页面，算是投机取巧吧)</p>
+
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" checked="checked" /><strong><em>live2d</em></strong></li>
+</ul>
+
+<p>只是添加不做修改的话，使用很简单 <a href="https://github.com/stevenjoezhang/live2d-widget">仓库地址</a></p>
+
+<p>因为live2d太影响网页的加载速度了,我就把它删了,如果需要可以查看一下以前的版本</p>
+
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" checked="checked" /><strong><em>动态背景</em></strong></li>
+</ul>
+
+<p>这是我从别的网站拿过来的</p>
+
+<p>css代码我读了一下，就是设置六张背景图片轮询来放大加载 ，不过效果做的很流畅和平滑</p>
+
+<p>代码我已经封装在 <a href="../../../styles/bg.css"><em>bg.css</em></a> 这个文件里，直接使用就行了</p>
+
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" checked="checked" /><strong><em>域名解析</em></strong></li>
+</ul>
+
+<p>用Cloud Flare 解析域名，同时这个网站还提供了cdn加速，访问统计，https加密等功能</p>
+
+<p>光是免费版功能就很强大了。</p>
+
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" checked="checked" /><strong><em>RSS订阅</em></strong></li>
+</ul>
+
+<p>访问主界面下的 <a href="../../../feed.xml">feeds</a></p>
+
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" checked="checked" /><strong><em>网站图标</em></strong></li>
+</ul>
+
+<p>一开始使用<a href="https://en.gravatar.com">garvatar</a>来配置，生成的头像和邮箱绑定，所有网站都通用</p>
+
+<p>后来发现直接在根目录生成*favicon.ico就行了</p>
+
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" checked="checked" /><strong><em>播放音乐</em></strong></li>
+</ul>
+
+<p>替换网页音乐播放器为Aplayer,至少比网易云外链好用</p>
+
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" checked="checked" /><strong><em>访问速度优化</em></strong></li>
+</ul>
+
+<p>使用 <a href="https://gtmetrix.com/">gtmetrix</a>对网站进行测速和优化</p>
+
+<p>对加载时间过长的图片<a href="https://tinypng.com/">无损压缩</a></p>
+
+<p>对公共的css，js文件使用cdn加速，延迟加载某些文件</p>
+
+<p>使用<em>ngnix</em>给常用的静态文件比如图片、html、js文件配置缓存</p>
+
+<p>并且排除不需要解析的文件</p>
+
+<p><em>需要做但是没有完成的有:</em></p>
+
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />字体优化和设置</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />鼠标点击特效</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />图片悬浮放大特效</li>
+</ul>
+
+<h2 id="结尾">结尾</h2>
+
+<p>本来把博客部署在Github就是为了省事，没想到却越来越折腾了</p>
+
+<p>人生真是充满了矛盾</p>
+:ET
