@@ -131,13 +131,21 @@ a:hover {
 .topbar-cover{
     position:relative;
 }
+
+.topbar-above{
+    position:absolute;
+}
 .topbar-cover img{
-    width: 140px;
-    background-image: url(../images/benzi.png);
-    background-position:center;
+    width: 110px;
     background-repeat:no-repeat;
-    background-size:90px;
-    border-radius:100% ;
+    border-radius:100%;
+
+}
+
+.topbar-above img{
+    width: 115px;
+    background-repeat:no-repeat;
+    transform:scale(1.7);//设置缩放比例
 }
 
 .topbar-button a {
